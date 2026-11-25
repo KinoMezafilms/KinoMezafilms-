@@ -1,0 +1,922 @@
+[
+  {
+    "title": "Фьорд",
+    "year": 2027,
+    "releaseDate": "2027-02-18",
+    "image": null,
+    "wikidataId": "Q137652478",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q137652478",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Чёрный шар (фильм, 2026)",
+    "year": 2027,
+    "releaseDate": "2027-02-01",
+    "image": null,
+    "wikidataId": "Q134548431",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q134548431",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Take Over Sofia",
+    "year": 2027,
+    "releaseDate": "2027-01-08",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Take%20Over%20Sofia%20film%20poster%202027.jpg",
+    "wikidataId": "Q141765352",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q141765352",
+    "language": "en",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "The Breath of Freedom",
+    "year": 2026,
+    "releaseDate": "2026-12-31",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/%C3%96zg%C3%BCrl%C3%BC%C4%9F%C3%BCn%20Nefesi%20-%20Poster.jpg",
+    "wikidataId": "Q141479967",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q141479967",
+    "language": "en",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "Бадди",
+    "year": 2026,
+    "releaseDate": "2026-12-10",
+    "image": null,
+    "wikidataId": "Q137356269",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q137356269",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "The Secret Heart",
+    "year": 2026,
+    "releaseDate": "2026-11-21",
+    "image": null,
+    "wikidataId": "Q768223",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q768223",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Возможная любовь",
+    "year": 2026,
+    "releaseDate": "2026-11-06",
+    "image": null,
+    "wikidataId": "Q137843740",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q137843740",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Надежда",
+    "year": 2026,
+    "releaseDate": "2026-11-05",
+    "image": "posters/hope-2026.png",
+    "wikidataId": "Q117429496",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q117429496",
+    "language": "ru",
+    "imageType": "generated_story_based_concept_poster",
+    "imageNote": "Оригинальная концепт-обложка по подтверждённому сюжету; не официальная афиша.",
+    "synopsis": "В изолированной прибрежной деревне Южной Кореи начальник полиции, офицер и группа охотников пытаются разобраться с появлением загадочного существа; поиски перерастают в конфликт с угрозой космического масштаба."
+  },
+  {
+    "title": "Flyktdjur",
+    "year": 2026,
+    "releaseDate": "2026-10-29",
+    "image": null,
+    "wikidataId": "Q141913126",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q141913126",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "God Laughs",
+    "year": 2026,
+    "releaseDate": "2026-10-29",
+    "image": null,
+    "wikidataId": "Q140603376",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q140603376",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Mumbo Jumbo",
+    "year": 2026,
+    "releaseDate": "2026-10-29",
+    "image": "posters/mumbo-jumbo-2026.png",
+    "wikidataId": "Q139100608",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q139100608",
+    "language": "en",
+    "imageType": "generated_story_based_concept_poster"
+  },
+  {
+    "title": "Воскресенья",
+    "year": 2026,
+    "releaseDate": "2026-10-29",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Premios%20Goya%202026%20-%20Los%20domingos.jpg",
+    "wikidataId": "Q132732126",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q132732126",
+    "language": "ru",
+    "imageType": "unverified"
+  },
+  {
+    "title": "It Ends",
+    "year": 2026,
+    "releaseDate": "2026-10-28",
+    "image": null,
+    "wikidataId": "Q133546293",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q133546293",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Сорванец",
+    "year": 2026,
+    "releaseDate": "2026-10-22",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Urchin%20%282025%29.png",
+    "wikidataId": "Q132322745",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q132322745",
+    "language": "ru",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Ebintio",
+    "year": 2026,
+    "releaseDate": "2026-10-15",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Ebinto-film-2026-affiche.jpg",
+    "wikidataId": "Q141572254",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q141572254",
+    "language": "en",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "Её личный ад",
+    "year": 2026,
+    "releaseDate": "2026-10-15",
+    "image": null,
+    "wikidataId": "Q134430061",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q134430061",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Битва моторов",
+    "year": 2026,
+    "releaseDate": "2026-10-08",
+    "image": null,
+    "wikidataId": "Q141174922",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q141174922",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Indiaː As I Didn't Know Her",
+    "year": 2026,
+    "releaseDate": "2026-09-27",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/India%20As%20I%20Didn%27t%20Know%20Her%20Secondary%20Poster.png",
+    "wikidataId": "Q142202288",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q142202288",
+    "language": "en",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "A Poet",
+    "year": 2026,
+    "releaseDate": "2026-09-24",
+    "image": null,
+    "wikidataId": "Q134278077",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q134278077",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Улица Малага",
+    "year": 2026,
+    "releaseDate": "2026-09-17",
+    "image": null,
+    "wikidataId": "Q135438796",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q135438796",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Le Faux Soir",
+    "year": 2026,
+    "releaseDate": "2026-09-16",
+    "image": null,
+    "wikidataId": "Q136686301",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q136686301",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Одиссея",
+    "year": 2026,
+    "releaseDate": "2026-09-11",
+    "image": null,
+    "wikidataId": "Q131547207",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q131547207",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "NAZA",
+    "year": 2026,
+    "releaseDate": "2026-09-10",
+    "image": null,
+    "wikidataId": "Q141168534",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q141168534",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "The Spiral",
+    "year": 2026,
+    "releaseDate": "2026-09-07",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/L%27estranea-6713.jpg",
+    "wikidataId": "Q140739770",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q140739770",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Dear You",
+    "year": 2026,
+    "releaseDate": "2026-09-04",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/2026-05-24%20%E7%BB%99%E9%98%BF%E5%AC%B7%E7%9A%84%E6%83%85%E4%B9%A6%E5%8F%96%E6%99%AF%E5%9C%B0%E8%A5%BF%E9%A9%AC%E8%B7%AF%2003.jpg",
+    "wikidataId": "Q139679997",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q139679997",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Выход 8",
+    "year": 2025,
+    "releaseDate": "2025-08-29",
+    "image": null,
+    "wikidataId": "Q134480207",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q134480207",
+    "language": "ru",
+    "imageType": "missing_local_asset_pending_review",
+    "description": "Мужчина оказывается заперт в бесконечном стерильном переходе метро. Чтобы добраться до выхода № 8, он должен замечать любые аномалии: если видит что-то необычное — возвращаться назад, если всё нормально — идти дальше. Одна ошибка отправляет его в начало."
+  },
+  {
+    "title": "Дитя ночи",
+    "year": 2026,
+    "releaseDate": "2026-08-06",
+    "image": null,
+    "wikidataId": "Q131372717",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q131372717",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Горькое Рождество",
+    "year": 2026,
+    "releaseDate": "2026-07-30",
+    "image": null,
+    "wikidataId": "Q134839394",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q134839394",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Divorce on Credit",
+    "year": 2026,
+    "releaseDate": "2026-07-24",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Divorce%20on%20Credit%20film%20poster%202026.jpg",
+    "wikidataId": "Q140343084",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q140343084",
+    "language": "en",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "North to Paradise",
+    "year": 2026,
+    "releaseDate": "2026-06-26",
+    "image": null,
+    "wikidataId": "Q140363094",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q140363094",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "I Am Frankelda",
+    "year": 2026,
+    "releaseDate": "2026-06-12",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20Animole%20soy%20frankelda%20%281%29.jpg",
+    "wikidataId": "Q123050446",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q123050446",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Romería",
+    "year": 2026,
+    "releaseDate": "2026-06-11",
+    "image": null,
+    "wikidataId": "Q128787358",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q128787358",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Another League",
+    "year": 2026,
+    "releaseDate": "2026-06-05",
+    "image": null,
+    "wikidataId": "Q137701336",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q137701336",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Глухая",
+    "year": 2026,
+    "releaseDate": "2026-05-28",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Premios%20Goya%202026%20-%20Equipo%20Sorda.jpg",
+    "wikidataId": "Q131462624",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q131462624",
+    "language": "ru",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Трус (фильм, 2026)",
+    "year": 2026,
+    "releaseDate": "2026-05-21",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Coward%20%282026%29.jpg",
+    "wikidataId": "Q138793955",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138793955",
+    "language": "ru",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Колония",
+    "year": 2026,
+    "releaseDate": "2026-05-21",
+    "image": null,
+    "wikidataId": "Q134285034",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q134285034",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Психопатка",
+    "year": 2026,
+    "releaseDate": "2026-05-21",
+    "image": null,
+    "wikidataId": "Q130751977",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q130751977",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Aquí",
+    "year": 2026,
+    "releaseDate": "2026-05-18",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Seminci%202026%20-%20Equipo%20Aqu%C3%AD%20-%201.jpg",
+    "wikidataId": "Q139505308",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q139505308",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "A Foggy Tale",
+    "year": 2026,
+    "releaseDate": "2026-05-08",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/A%20Foggy%20Tale%2C%20winner%20of%20best%20narrative%20film%2C%202025%20Golden%20Horse%20Awards%2002.jpg",
+    "wikidataId": "Q135265466",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q135265466",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Дракула",
+    "year": 2026,
+    "releaseDate": "2026-05-07",
+    "image": null,
+    "wikidataId": "Q135241825",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q135241825",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Malenadina Rahasyamaya Pustaka Film",
+    "year": 2026,
+    "releaseDate": "2026-05-03",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Moonlit%20Forest%20Gathering.png",
+    "wikidataId": "Q140528791",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q140528791",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Four Seasons",
+    "year": 2026,
+    "releaseDate": "2026-04-26",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/N%C3%A9gy%20%C3%A9vszak%20poszter.png",
+    "wikidataId": "Q141646076",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q141646076",
+    "language": "en",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "My Name",
+    "year": 2026,
+    "releaseDate": "2026-04-15",
+    "image": null,
+    "wikidataId": "Q138197878",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138197878",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Heads or Tails?",
+    "year": 2026,
+    "releaseDate": "2026-04-10",
+    "image": null,
+    "wikidataId": "Q133852992",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q133852992",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "The Dinner",
+    "year": 2026,
+    "releaseDate": "2026-04-09",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Premios%20Goya%202026%20-%20La%20cena.jpg",
+    "wikidataId": "Q135678444",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q135678444",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Aisha",
+    "year": 2026,
+    "releaseDate": "2026-03-28",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Aisha%20Documentary%20Adhadhu%20Cover.jpg",
+    "wikidataId": "Q138835569",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138835569",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Майк, и Ник, и Ник, и Элис",
+    "year": 2026,
+    "releaseDate": "2026-03-27",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Mike%20%26%20Nick%20%26%20Nick%20%26%20Alice.png",
+    "wikidataId": "Q130240838",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q130240838",
+    "language": "ru",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Dhurandhar: The Revenge",
+    "year": 2026,
+    "releaseDate": "2026-03-19",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Dhurandhar%20The%20Revenge.png",
+    "wikidataId": "Q137998501",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q137998501",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Частная жизнь (фильм, 2025)",
+    "year": 2026,
+    "releaseDate": "2026-03-19",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/A%20Private%20Life-60135.jpg",
+    "wikidataId": "Q132456674",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q132456674",
+    "language": "ru",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Broken Voices",
+    "year": 2026,
+    "releaseDate": "2026-02-26",
+    "image": null,
+    "wikidataId": "Q130740282",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q130740282",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Soumsoum, The Night of the Stars",
+    "year": 2026,
+    "releaseDate": "2026-02-19",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Achouackh%20Abakar%20Souleymane%2C%20Mahamat%20Saleh%20Haroun%20at%20Berlinale%202026.jpg",
+    "wikidataId": "Q138012469",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138012469",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "A Family",
+    "year": 2026,
+    "releaseDate": "2026-02-15",
+    "image": null,
+    "wikidataId": "Q138407460",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138407460",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Kaprálová",
+    "year": 2026,
+    "releaseDate": "2026-02-12",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Bianca%20Maretti.jpg",
+    "wikidataId": "Q138698568",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138698568",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Sunday Ninth",
+    "year": 2026,
+    "releaseDate": "2026-02-11",
+    "image": null,
+    "wikidataId": "Q136678351",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q136678351",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Fuck You, Love",
+    "year": 2026,
+    "releaseDate": "2026-02-06",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Fuck%20You%20Love%20film%20poster%202026.jpg",
+    "wikidataId": "Q140342525",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q140342525",
+    "language": "en",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "Отец, мать, сестра, брат",
+    "year": 2026,
+    "releaseDate": "2026-02-05",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Father%20Mother%20Sister%20Brother-69514.jpg",
+    "wikidataId": "Q124364048",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q124364048",
+    "language": "ru",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Melania",
+    "year": 2026,
+    "releaseDate": "2026-01-30",
+    "image": null,
+    "wikidataId": "Q137441669",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q137441669",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "The Friend's House Is Here",
+    "year": 2026,
+    "releaseDate": "2026-01-24",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/The%20Friend%27s%20House%20is%20Here%20%282026%29.jpg",
+    "wikidataId": "Q137380440",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q137380440",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Голос Хинд Раджаб",
+    "year": 2026,
+    "releaseDate": "2026-01-22",
+    "image": null,
+    "wikidataId": "Q135038882",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q135038882",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Tore!",
+    "year": 2026,
+    "releaseDate": "2026-01-16",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Props%20from%20the%20movie%20%22Tore%22IMG%200651.jpg",
+    "wikidataId": "Q140998446",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q140998446",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "28 лет спустя: Храм костей",
+    "year": 2026,
+    "releaseDate": "2026-01-16",
+    "image": null,
+    "wikidataId": "Q129423731",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q129423731",
+    "language": "ru",
+    "imageType": "missing_local_asset_pending_review",
+    "sourceImageBeforeReview": "https://commons.wikimedia.org/wiki/Special:FilePath/Alfie%20Williams%20at%20the%20London%20premiere%20of%2028%20Years%20Later%20The%20Bone%20Temple.jpg",
+    "imageNote": "Оригинальная концептуальная иллюстрация по подтверждённому сюжету; не официальная афиша."
+  },
+  {
+    "title": "Alpha",
+    "year": 2026,
+    "releaseDate": "2026-01-15",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Alpha%20avant-premi%C3%A8re.jpg",
+    "wikidataId": "Q132192625",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q132192625",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Boy",
+    "year": 2026,
+    "releaseDate": "2026-01-14",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Fancine%202025%20-%20Jo%20Byung-gyu%20%26%20Sang-Deok%20Lee.jpg",
+    "wikidataId": "Q137740016",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q137740016",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "As augas",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Seminci%202026%20-%20Equipo%20As%20augas%20-%201.jpg",
+    "wikidataId": "Q142242748",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q142242748",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Comando Io",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Comando%20Io%20-%20Locandina.jpg",
+    "wikidataId": "Q142234497",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q142234497",
+    "language": "en",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "Wirbel",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Uveden%C3%AD%20filmu%20Wirbel%20na%20LF%C5%A0%202026.jpg",
+    "wikidataId": "Q140513922",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q140513922",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Case 0 : Tomorrow",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/CASE%200%20TOMORROW%202026%20Film%20Poster.jpg",
+    "wikidataId": "Q140164231",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q140164231",
+    "language": "ru",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "The Illusion Industry",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/The%20Illusion%20Industry%202026%20Film%20Poster.jpg",
+    "wikidataId": "Q140163279",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q140163279",
+    "language": "ru",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "The Great City",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/The%20Great%20City%202026%20Film%20Poster.jpg",
+    "wikidataId": "Q140162744",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q140162744",
+    "language": "ru",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "Archaeology of Unborn Faces",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Archaeology%20of%20Unborn%20Faces%202026%20Film%20Poster.jpg",
+    "wikidataId": "Q140161194",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q140161194",
+    "language": "ru",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "Уго 24",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": null,
+    "wikidataId": "Q138782652",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138782652",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Moonwalk",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Moonwalk%20film%20poster.jpg",
+    "wikidataId": "Q138650666",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138650666",
+    "language": "en",
+    "imageType": "likely_poster"
+  },
+  {
+    "title": "9 Moons",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": null,
+    "wikidataId": "Q138589248",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138589248",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Corredora",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": null,
+    "wikidataId": "Q138414144",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138414144",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Cool Books",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": null,
+    "wikidataId": "Q138412834",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138412834",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Спасение",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": null,
+    "wikidataId": "Q138031189",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138031189",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Конец всего",
+    "year": 2026,
+    "releaseDate": "2026-01-01",
+    "image": null,
+    "wikidataId": "Q138024654",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q138024654",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Чума",
+    "year": 2025,
+    "releaseDate": "2025-12-24",
+    "image": null,
+    "wikidataId": "Q134052834",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q134052834",
+    "language": "ru",
+    "imageType": "missing_local_asset_pending_review",
+    "imageNote": "Оригинальный концепт-постер по синопсису официального сайта фильма и описанию фестиваля в Каннах; не официальная афиша.",
+    "description": "В летнем лагере двенадцатилетний мальчик оказывается втянут в жестокую традицию травли ребёнка-изгоя, которого называют «Чумой». Постепенно граница между жестокой игрой и реальной угрозой размывается."
+  },
+  {
+    "title": "Dhurandhar",
+    "year": 2025,
+    "releaseDate": "2025-12-05",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Dhurandhar.png",
+    "wikidataId": "Q135230927",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q135230927",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "The Mysterious Gaze of the Flamingo",
+    "year": 2025,
+    "releaseDate": "2025-12-04",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Premios%20Goya%202026%20-%20Equipo%20La%20misteriosa%20mirada%20del%20flamenco.jpg",
+    "wikidataId": "Q134285373",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q134285373",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Amsterdamned II",
+    "year": 2025,
+    "releaseDate": "2025-12-01",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Amsterdamned%20II%20%282026%29.png",
+    "wikidataId": "Q123985273",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q123985273",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "The Devil Smokes",
+    "year": 2025,
+    "releaseDate": "2025-11-27",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/46th%20ICFF%20%E2%80%9CManaki%20Brothers%E2%80%9D%20-%20Preview%20of%20the%20film%20%22The%20Devil%20Smokes%22.jpg",
+    "wikidataId": "Q131990763",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q131990763",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "40 secondi",
+    "year": 2025,
+    "releaseDate": "2025-11-19",
+    "image": null,
+    "wikidataId": "Q135159636",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q135159636",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "A Film About Choosing to Live",
+    "year": 2025,
+    "releaseDate": "2025-11-12",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/A%20Film%20About%20Choosing%20to%20Live%20%282025%29%20still%20-%20filming%20in%20the%20forest.jpg",
+    "wikidataId": "Q139573754",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q139573754",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "No nos moverán",
+    "year": 2025,
+    "releaseDate": "2025-11-12",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Movimiento%20estudiantil%2068%2034.jpg",
+    "wikidataId": "Q131706098",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q131706098",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Бугония",
+    "year": 2025,
+    "releaseDate": "2025-11-07",
+    "image": null,
+    "wikidataId": "Q125971387",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q125971387",
+    "language": "ru",
+    "imageType": "missing_local_asset_pending_review",
+    "imageNote": "Оригинальный концепт-постер по официальному синопсису; не официальная афиша.",
+    "description": "Двое мужчин, одержимых теориями заговора, похищают руководительницу крупной компании, считая её инопланетянкой, которая намерена уничтожить Землю."
+  },
+  {
+    "title": "The pupil",
+    "year": 2025,
+    "releaseDate": "2025-10-30",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/De%20pupil%20%282026%29.png",
+    "wikidataId": "Q136680597",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q136680597",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "The Virgin of Quarry Lake",
+    "year": 2025,
+    "releaseDate": "2025-10-30",
+    "image": null,
+    "wikidataId": "Q131428552",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q131428552",
+    "language": "en",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "When a River Becomes the Sea",
+    "year": 2025,
+    "releaseDate": "2025-10-28",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Seminci%202025%20-%20When%20a%20River%20Becomes%20the%20Sea.jpg",
+    "wikidataId": "Q135436966",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q135436966",
+    "language": "en",
+    "imageType": "unverified"
+  },
+  {
+    "title": "Спрингстин. Избавь меня от небытия",
+    "year": 2025,
+    "releaseDate": "2025-10-24",
+    "image": null,
+    "wikidataId": "Q125401070",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q125401070",
+    "language": "ru",
+    "imageType": "not_poster"
+  },
+  {
+    "title": "Хедда",
+    "year": 2025,
+    "releaseDate": "2025-10-22",
+    "image": null,
+    "wikidataId": "Q124215661",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q124215661",
+    "language": "ru",
+    "imageType": "missing_local_asset_pending_review",
+    "posterNote": "Авторская концепт-обложка по подтверждённому сюжету; не официальная афиша."
+  }
+]
