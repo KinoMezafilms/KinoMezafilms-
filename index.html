@@ -1,4 +1,8 @@
-[26.11.2026 11:44] KinoMezafilms: <!DOCTYPE html>
+function renderFilters(){
+document.getElementById("filters").innerHTML=genres.map(g=>
+<button class="${currentGenre===g?"active":""}" onclick="setGenre(${JSON.stringify(g)})">${escapeHTML(g)}</button>
+).join("");
+}
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
