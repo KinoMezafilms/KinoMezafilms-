@@ -47,8 +47,7 @@ footer{border-top:1px solid #ffffff18;padding:25px;text-align:center;color:var(-
 .player-label{font-size:13px;color:var(--muted);margin:12px 0 5px}
 .admin-panel{display:none;margin:22px 0;padding:20px;background:#171729;border:1px solid #a855f755;border-radius:16px}
 .admin-panel.show{display:block}.admin-panel h2{margin-top:0}
-.
-[26.11.2026 11:44] KinoMezafilms: form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .form-grid .full{grid-column:1/-1}
 .admin-list{margin-top:18px;display:grid;gap:8px}
 .admin-item{padding:12px;background:#202039;border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
@@ -450,9 +449,9 @@ function renderAdminList(){
 
 /* КАТАЛОГ */
 function renderFilters(){
- document.getElementById("filters").innerHTML=genres.map(g=>
-  <button class="${currentGenre===g?"active":""}" onclick="setGenre(${JSON.stringify(g)})">${escapeHTML(g)}</button>
- ).join("");
+document.getElementById("filters").innerHTML=genres.map(g=>
+<button class="${currentGenre===g?"active":""}" onclick="setGenre(${JSON.stringify(g)})">${escapeHTML(g)}</button>
+).join("");
 }
 function setGenre(g){currentGenre=g;currentMode="all";renderMovies()}
 function showAll(){currentMode="all";currentGenre="Все";renderMovies()}
