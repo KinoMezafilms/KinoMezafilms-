@@ -9,13 +9,12 @@
 :root{--bg:#090914;--panel:#151527;--panel2:#202039;--text:#f5f5ff;--muted:#aaaac2;--accent:#a855f7;--accent2:#ec4899}
 *{box-sizing:border-box}
 body{margin:0;background:radial-gradient(ellipse at top,#211039 0,#090914 55%);color:var(--text);font-family:Arial,sans-serif;min-height:100vh}
-header{padding:18px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #ffffff15;background:#090914e8;position:sticky;top:0;z-index:10;backdrop-filter:blur(15px)}
+header{padding:16px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid #ffffff15;background:#090914ed;position:sticky;top:0;z-index:10;backdrop-filter:blur(15px)}
 .logo{font-size:22px;font-weight:900;letter-spacing:1px}.logo span{color:#c084fc}
-nav{display:flex;gap:8px;flex-wrap:wrap}
+nav{display:flex;gap:7px;flex-wrap:wrap}
 button,input,select{font:inherit}
-button{cursor:pointer;border:1px solid #ffffff18;color:white;background:var(--panel2);padding:10px 14px;border-radius:10px;transition:.2s}
-button:hover{background:linear-gradient(120deg,var(--accent),var(--accent2))}
-button.active{background:linear-gradient(120deg,var(--accent),var(--accent2))}
+button{cursor:pointer;border:1px solid #ffffff18;color:white;background:var(--panel2);padding:10px 13px;border-radius:10px;transition:.2s}
+button:hover,button.active{background:linear-gradient(120deg,var(--accent),var(--accent2))}
 button:disabled{opacity:.5;cursor:not-allowed}
 main{max-width:1250px;margin:auto;padding:25px 18px 60px}
 .hero{padding:35px 25px;border:1px solid #ffffff17;border-radius:20px;background:linear-gradient(120deg,#35135b,#17172e 65%,#39153d);margin-bottom:25px}
@@ -47,9 +46,10 @@ footer{border-top:1px solid #ffffff18;padding:25px;text-align:center;color:var(-
 .player-wrap iframe,.player-wrap video{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
 .player-label{font-size:13px;color:var(--muted);margin:12px 0 5px}
 .admin-panel{display:none;margin:22px 0;padding:20px;background:#171729;border:1px solid #a855f755;border-radius:16px}
-  .admin-panel.show{display:block}
+.admin-panel.show{display:block}
 .admin-panel h2{margin-top:0}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.
+  form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .form-grid .full{grid-column:1/-1}
 .admin-list{margin-top:18px;display:grid;gap:8px}
 .admin-item{padding:12px;background:#202039;border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
@@ -90,23 +90,21 @@ footer{border-top:1px solid #ffffff18;padding:25px;text-align:center;color:var(-
 
   <section class="admin-panel" id="adminPanel">
     <h2>🔐 Панель администратора</h2>
-    <p class="small">Добавляй ссылки на фильмы, которые разрешено публично встраивать. Изменения сохраняются в Supabase.</p>
+    <p class="small">Добавляй ссылки на видео, которые разрешено публично встраивать.</p>
     <div class="form-grid">
       <div class="full">
         <label class="small" for="adminMovie">Фильм</label>
         <select id="adminMovie"></select>
       </div>
       <div class="full">
-        <label class="small" for="videoUrl">Ссылка на полный фильм или видео</label>
+        <label class="small" for="videoUrl">Ссылка на видео</label>
         <input id="videoUrl" placeholder="https://...">
       </div>
       <div class="full">
         <label class="small" for="trailerUrl">Ссылка на трейлер (необязательно)</label>
         <input id="trailerUrl" placeholder="https://...">
       </div>
-      <div class="full">
-        <button onclick="saveMovieLink()">Сохранить ссылку</button>
-      </div>
+      <div class="full"><button onclick="saveMovieLink()">Сохранить ссылку</button></div>
     </div>
     <div class="admin-list" id="adminList"></div>
   </section>
@@ -142,7 +140,7 @@ footer{border-top:1px solid #ffffff18;padding:25px;text-align:center;color:var(-
   <div class="modal-content">
     <button class="close" onclick="closeLogin()">✕</button>
     <h2>Вход администратора</h2>
-    <p class="small">Войди с аккаунтом, который ты создал в Supabase.</p>
+    <p class="small">Войди с аккаунтом, созданным в Supabase.</p>
     <input id="email" type="email" autocomplete="username" placeholder="Электронная почта">
     <br><br>
     <input id="password" type="password" autocomplete="current-password" placeholder="Пароль">
@@ -157,22 +155,19 @@ footer{border-top:1px solid #ffffff18;padding:25px;text-align:center;color:var(-
 <script>
 "use strict";
 
-/* НАСТРОЙКИ SUPABASE */
-const SUPABASE_URL = "https://randamxoghulcnjncybw.supabase.co";
-const SUPABASE_KEY = "sb_publishable_WNSviuHLFahwoS5_hB53Cw_2MQpECdi";
+/* SUPABASE */
+const SUPABASE_URL="https://randamxoghulcnjncybw.supabase.co";
+const SUPABASE_KEY="sb_publishable_WNSviuHLFahwoS5_hB53Cw_2MQpECdi";
 
-let db = null;
-let currentUser = null;
-let isAdmin = false;
-let streamLinks = {};
-let authReady = false;
+let db=null,currentUser=null,isAdmin=false,streamLinks={};
+try{
+  if(window.supabase){
+    db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  }
+}catch(error){console.error("Supabase:",error)}
 
-if(window.supabase && SUPABASE_URL.startsWith("https://") && SUPABASE_KEY.startsWith("sb_publishable_")){
-  db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-}
-
-/* КАТАЛОГ ФИЛЬМОВ */
-const films = [
+/* КАТАЛОГ */
+const films=[
 ["Начало","Inception",2010,"Фантастика",8.8,"Профессиональный вор проникает в сны людей и крадёт секреты."],
 ["Интерстеллар","Interstellar",2014,"Фантастика",8.7,"Путешествие через космос в поисках нового дома для человечества."],
 ["Матрица","The Matrix",1999,"Фантастика",8.7,"Хакер узнаёт, что привычный мир — искусственная реальность."],
@@ -202,9 +197,9 @@ const films = [
 ["Аватар: Путь воды","Avatar: The Way of Water",2022,"Фантастика",7.5,"Семья Салли пытается защитить свой дом."],
 ["Пираты Карибского моря","Pirates of the Caribbean: The Curse of the Black Pearl",2003,"Приключения",8.1,"Капитан Джек Воробей отправляется за проклятым сокровищем."],
 ["Сокровища нации","National Treasure",2004,"Приключения",6.9,"Охотник за сокровищами ищет историческую загадку."],
-  ["Индиана Джонс","Raiders of the Lost Ark",1981,"Приключения",8.4,"Археолог отправляется на поиски древнего артефакта."],
+["Индиана Джонс","Raiders of the Lost Ark",1981,"Приключения",8.4,"Археолог отправляется на поиски древнего артефакта."],
 ["Титаник","Titanic",1997,"Мелодрама",7.9,"История любви на борту легендарного лайнера."],
-["1+1","The Intouchables",2011,"Комедия",8.5,"Неожиданная дружба меняет жизни двух людей."],
+  ["1+1","The Intouchables",2011,"Комедия",8.5,"Неожиданная дружба меняет жизни двух людей."],
 ["Зелёная книга","Green Book",2018,"Драма",8.2,"Двое мужчин отправляются в путешествие по Америке."],
 ["Достать ножи","Knives Out",2019,"Детектив",7.9,"Детектив расследует загадочную смерть известного писателя."],
 ["Достать ножи: Стеклянная луковица","Glass Onion",2022,"Детектив",7.1,"Компания друзей оказывается в центре загадочного расследования."],
@@ -237,11 +232,10 @@ const films = [
 ["Король Лев","The Lion King",1994,"Мультфильм",8.5,"Молодой лев ищет своё место в мире."],
 ["ВАЛЛ-И","WALL-E",2008,"Мультфильм",8.4,"Робот находит надежду на заброшенной Земле."],
 ["Вверх","Up",2009,"Мультфильм",8.3,"Пожилой мужчина отправляется в невероятное путешествие."],
-["Тайна Коко","Coco",2017,"Мультфильм",8.
- 4,"Мальчик попадает в мир предков и музыки."],
+["Тайна Коко","Coco",2017,"Мультфильм",8.4,"Мальчик попадает в мир предков и музыки."],
 ["Головоломка","Inside Out",2015,"Мультфильм",8.1,"Эмоции девочки пытаются помочь ей справиться с переменами."],
 ["Душа","Soul",2020,"Мультфильм",8.0,"Музыкант размышляет о смысле жизни."],
-["Рататуй","Ratatouille",2007,"Мультфильм",8.1,"Крыса мечтает стать великим поваром."],
+  ["Рататуй","Ratatouille",2007,"Мультфильм",8.1,"Крыса мечтает стать великим поваром."],
 ["Один дома","Home Alone",1990,"Комедия",7.7,"Мальчик остаётся дома один на Рождество."],
 ["Маска","The Mask",1994,"Комедия",7.0,"Найденная маска меняет жизнь скромного банковского работника."],
 ["Брюс Всемогущий","Bruce Almighty",2003,"Комедия",6.8,"Обычный человек получает божественные способности."],
@@ -274,187 +268,226 @@ const films = [
 
 const genres=["Все","Боевик","Комедия","Драма","Фантастика","Триллер","Ужасы","Приключения","Фэнтези","Мультфильм","Криминал","Детектив","Мелодрама"];
 let currentGenre="Все",currentMode="all";
-let favorites=load("kmf_favorites",[]),later=load("kmf_later",[]);
-let profileName=load("kmf_name","Гость"),posterCache=load("kmf_posters",{});
+let favorites=load("kmf_favorites",[]);
+let later=load("kmf_later",[]);
+let profileName=load("kmf_name","Гость");
+let posterCache=load("kmf_posters",{});
 let posterLoading=new Set();
 
-function load(key,fallback){try{const v=localStorage.getItem(key);return v?JSON.parse(v):fallback}catch(e){return fallback}}
-function save(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch(e){}}
-function toast(message){const el=document.getElementById("toast");el.textContent=message;el.style.display="block";clearTimeout(toast.timer);toast.
-  timer=setTimeout(()=>el.style.display="none",2600)}
-function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function makeId(title){return title}
+if(!Array.isArray(favorites))favorites=[];
+if(!Array.isArray(later))later=[];
+if(!posterCache||typeof posterCache!=="object"||Array.isArray(posterCache))posterCache={};
 
-/* SUPABASE: ПРОВЕРКА СЕССИИ И ПРАВ */
-async function refreshAuth(){
-  if(!db){toast("Не удалось загрузить Supabase. Проверь подключение к интернету.");return}
-  const {data,error}=await db.auth.getSession();
-  if(error){console.error(error);return}
-  currentUser=data.session?.user||null;
-  await checkAdmin();
+function load(key,fallback){
+  try{const value=localStorage.getItem(key);return value?JSON.parse(value):fallback}
+  catch(error){return fallback}
 }
-async function checkAdmin(){
-  isAdmin=false;
-  if(currentUser && db){
-    const {data,error}=await db.rpc("is_site_admin");
-    if(!error)isAdmin=data===true;
-    else console.error("Проверка администратора:",error);
-  }
-  updateAuthUI();
-  if(isAdmin){await loadAdminLinks();fillAdminSelect()}
+function save(key,value){
+  try{localStorage.setItem(key,JSON.stringify(value))}catch(error){}
 }
+function toast(message){
+  const el=document.getElementById("toast");
+  el.textContent=message;el.style.display="block";
+  clearTimeout(toast.timer);
+  toast.timer=setTimeout(()=>el.style.
+    display="none",2800);
+}
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+/* АВТОРИЗАЦИЯ */
+function openLogin(){
+  document.getElementById("loginMessage").textContent="";
+  document.getElementById("loginModal").classList.add("show");
+}
+function closeLogin(){document.getElementById("loginModal").classList.remove("show")}
+
 function updateAuthUI(){
   document.getElementById("loginButton").style.display=currentUser?"none":"inline-block";
   document.getElementById("logoutButton").style.display=currentUser?"inline-block":"none";
   document.getElementById("adminButton").style.display=isAdmin?"inline-block":"none";
   if(!isAdmin)document.getElementById("adminPanel").classList.remove("show");
 }
+
+async function checkAdmin(){
+  isAdmin=false;
+  if(currentUser&&db){
+    try{
+      const {data,error}=await db.rpc("is_site_admin");
+      if(error)console.error("Проверка прав:",error);
+      else isAdmin=data===true;
+    }catch(error){console.error(error)}
+  }
+  updateAuthUI();
+  if(isAdmin){
+    fillAdminSelect();
+    await loadAdminLinks();
+  }
+}
+
 async function login(){
   if(!db){toast("Supabase не подключён");return}
   const email=document.getElementById("email").value.trim();
   const password=document.getElementById("password").value;
   const message=document.getElementById("loginMessage");
+  const button=document.getElementById("loginSubmit");
   if(!email||!password){message.textContent="Введи почту и пароль.";return}
-  document.getElementById("loginSubmit").disabled=true;
-  message.textContent="Выполняется вход...";
-  const {data,error}=await db.auth.signInWithPassword({email,password});
-  document.getElementById("loginSubmit").disabled=false;
-  if(error){message.textContent="Ошибка входа: "+error.message;return}
-  currentUser=data.user;
-  await checkAdmin();
-  if(!isAdmin){
-    await db.auth.signOut();
-    currentUser=null;
-    updateAuthUI();
-    message.textContent="У этого аккаунта нет прав администратора.";
-    return;
-  }
-  closeLogin();
-  toast("Вход администратора выполнен");
+  button.disabled=true;message.textContent="Выполняется вход...";
+  try{
+    const {data,error}=await db.auth.signInWithPassword({email,password});
+    if(error)throw error;
+    currentUser=data.user;
+    await checkAdmin();
+    if(!isAdmin){
+      await db.auth.signOut();
+      currentUser=null;
+      updateAuthUI();
+      message.textContent="У этого аккаунта нет прав администратора.";
+      return;
+    }
+    closeLogin();toast("Вход администратора выполнен");
+  }catch(error){
+    message.textContent="Ошибка входа: "+(error.message||"Неизвестная ошибка");
+  }finally{button.disabled=false}
 }
+
 async function logout(){
   if(!db)return;
-  await db.auth.signOut();
+  try{await db.auth.signOut()}catch(error){console.error(error)}
   currentUser=null;isAdmin=false;streamLinks={};
   updateAuthUI();renderMovies();
   toast("Ты вышел из аккаунта");
 }
-function openLogin(){document.getElementById("loginMessage").textContent="";document.getElementById("loginModal").classList.add("show")}
-function closeLogin(){document.getElementById("loginModal").classList.remove("show")}
+
 function toggleAdmin(){
   if(!isAdmin)return;
-  document.getElementById("adminPanel").classList.toggle("show");
-  if(document.getElementById("adminPanel").classList.contains("show"))document.getElementById("adminPanel").scrollIntoView({behavior:"smooth"});
+  const panel=document.getElementById("adminPanel");
+  panel.classList.toggle("show");
+  if(panel.classList.contains("show"))panel.scrollIntoView({behavior:"smooth"});
 }
 
-/* ССЫЛКИ И ВИДЕО */
-async function loadAdminLinks(){
-  if(!db||!isAdmin)return;
-  const {data,error}=await db.from("movie_streams").select("*").order("movie_id");
-  if(error){console.error(error);toast("Не удалось загрузить ссылки");return}
-  streamLinks={};
-  (data||[]).forEach(row=>streamLinks[row.movie_id]=row);
-  renderAdminList();
-  renderMovies();
-}
-async function loadPublicLinks(){
-  if(!db)return;
-  const {data,error}=await db.from("movie_streams").select("movie_id,video_url,trailer_url");
-  if(error){console.error("Ссылки на фильмы:",error);return}
-  streamLinks={};
-  (data||[]).forEach(row=>streamLinks[row.movie_id]=row);
-  renderMovies();
-}
+/* ССЫЛКИ НА ВИДЕО */
 function safeHttpsUrl(value){
-  try{const u=new URL(value.trim());return u.protocol==="https:"?u:null}catch(e){return null}
+  try{
+    const url=new URL(value.trim());
+    return url.protocol==="https:"?url:null;
+  }catch(error){return null}
 }
+
 function videoSource(raw){
-  const u=safeHttpsUrl(raw);
-  if(!u)return null;
-  const host=u.hostname.toLowerCase().replace(/^www\./,"");
-  if(host==="youtube.com"||host==="m.youtube.com"||host==="youtu.be"||host==="youtube-nocookie.com"){
+  const url=safeHttpsUrl(raw);
+  if(!url)return null;
+  const host=url.hostname.toLowerCase().replace(/^www\./,"");
+  if(["youtube.com","m.youtube.com","youtu.be","youtube-nocookie.com"].includes(host)){
     let id="";
-    if(host==="youtu.be")id=u.pathname.slice(1);
-    else if(u.pathname==="/watch")id=u.searchParams.get("v")||"";
-    else if(u.pathname.startsWith("/embed/"))id=u.pathname.split("/")[2]||"";
-    else if(u.pathname.startsWith("/shorts/"))id=u.pathname.
-      split("/")[2]||"";
+    if(host==="youtu.be")id=url.pathname.slice(1);
+    else if(url.pathname==="/watch")id=url.searchParams.get("v")||"";
+    else if(url.pathname.startsWith("/embed/"))id=url.pathname.split("/")[2]||"";
+    else if(url.pathname.startsWith("/shorts/"))id=url.pathname.split("/")[2]||"";
     if(!/^[a-zA-Z0-9_-]{6,20}$/.test(id))return null;
     return {type:"iframe",url:"https://www.youtube-nocookie.com/embed/"+id};
   }
   if(host==="vimeo.com"||host==="player.vimeo.com"){
-    const match=u.pathname.match(/(?:video\/)?(\d+)/);
+    const match=url.pathname.match(/(?:video\/)?(\d+)/);
     if(!match)return null;
     return {type:"iframe",url:"https://player.vimeo.com/video/"+match[1]};
   }
-  if(/\.(mp4|webm|m3u8)$/i.test(u.pathname)){
-    return {type:"video",url:u.href};
+  if(/\.(mp4|webm|m3u8)$/i.test(url.pathname)){
+    return {type:"video",url:url.href};
   }
   return null;
 }
-function playMovie(i){
-  const link=streamLinks[makeId(films[i][0])];
-  if(!link?.video_url){toast("Для этого фильма пока нет ссылки на просмотр");return}
-  const source=videoSource(link.video_url);
-  if(!source){toast("Неподдерживаемая ссылка. Используй YouTube, Vimeo или прямой MP4/WebM/HLS URL.");return}
-  const player=source.type==="iframe"
-    ?`<iframe src="${escapeHTML(source.url)}" title="${escapeHTML(films[i][0])}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`
-    :`<video controls playsinline preload="metadata" src="${escapeHTML(source.url)}"></video>`;
-  const box=document.getElementById("playerArea");
-  if(!box)return;
-  box.innerHTML=`<div class="player-label">▶️ Сейчас воспроизводится: ${escapeHTML(films[i][0])}</div><div class="player-wrap">${player}</div>`;
-  box.scrollIntoView({behavior:"smooth",block:"center"});
+
+async function loadPublicLinks(){
+  if(!db)return;
+  try{
+    const {data,error}=await db.from("movie_streams").select("movie_id,video_url,trailer_url");
+    if(error){console.error("Загрузка видео:",error);return}
+    streamLinks={};
+    (data||[]).forEach(row=>streamLinks[row.movie_id]=row);
+    renderMovies();
+  }catch(error){console.
+    error("Ошибка загрузки видео:",error)}
 }
+
+async function loadAdminLinks(){
+  if(!db||!isAdmin)return;
+  try{
+    const {data,error}=await db.from("movie_streams").select("*").order("movie_id");
+    if(error){console.error(error);toast("Не удалось загрузить ссылки: "+error.message);return}
+    streamLinks={};
+    (data||[]).forEach(row=>streamLinks[row.movie_id]=row);
+    renderAdminList();renderMovies();
+  }catch(error){console.error(error)}
+}
+
+function fillAdminSelect(){
+  const select=document.getElementById("adminMovie");
+  if(!select)return;
+  select.innerHTML=films.map(f=>`<option value="${escapeHTML(f[0])}">${escapeHTML(f[0])}</option>`).join("");
+}
+
 async function saveMovieLink(){
-  if(!isAdmin||!db){toast("Нет прав администратора");return}
+  if(!isAdmin||!db||!currentUser){toast("Нет прав администратора");return}
   const title=document.getElementById("adminMovie").value;
   const video=document.getElementById("videoUrl").value.trim();
   const trailer=document.getElementById("trailerUrl").value.trim();
-  if(!title||!video){toast("Выбери фильм и укажи ссылку на видео");return}
-  if(!videoSource(video)){toast("Ссылка должна вести на поддерживаемое видео YouTube, Vimeo, MP4, WebM или HLS");return}
+  if(!title||!video){toast("Выбери фильм и укажи ссылку");return}
+  if(!videoSource(video)){toast("Неподдерживаемая ссылка на видео");return}
   if(trailer&&!safeHttpsUrl(trailer)){toast("Ссылка на трейлер должна начинаться с https://");return}
-  const {error}=await db.from("movie_streams").upsert({
-    movie_id:title,video_url:video,trailer_url:trailer||null,
-    updated_at:new Date().toISOString(),updated_by:currentUser.id
-  },{onConflict:"movie_id"});
-  if(error){console.error(error);toast("Ошибка сохранения: "+error.message);return}
-  document.getElementById("videoUrl").value="";
-  document.getElementById("trailerUrl").value="";
-  await loadAdminLinks();
-  toast("Ссылка сохранена");
+  try{
+    const {error}=await db.from("movie_streams").upsert({
+      movie_id:title,video_url:video,trailer_url:trailer||null,
+      updated_at:new Date().toISOString(),updated_by:currentUser.id
+    },{onConflict:"movie_id"});
+    if(error)throw error;
+    document.getElementById("videoUrl").value="";
+    document.getElementById("trailerUrl").value="";
+    await loadAdminLinks();
+    toast("Ссылка сохранена");
+  }catch(error){toast("Ошибка сохранения: "+error.message)}
 }
+
 async function deleteMovieLink(title){
   if(!isAdmin||!db)return;
   if(!confirm("Удалить ссылку для фильма «"+title+"»?"))return;
-  const {error}=await db.from("movie_streams").delete().eq("movie_id",title);
-  if(error){toast("Ошибка удаления: "+error.message);return}
-  await loadAdminLinks();toast("Ссылка удалена");
+  try{
+    const {error}=await db.from("movie_streams").delete().eq("movie_id",title);
+    if(error)throw error;
+    await loadAdminLinks();toast("Ссылка удалена");
+  }catch(error){toast("Ошибка удаления: "+error.message)}
 }
-function fillAdminSelect(){
-  const select=document.getElementById("adminMovie");
-  select.innerHTML=films.map(f=>`<option value="${escapeHTML(f[0])}">${escapeHTML(f[0])}</option>`).join("");
-}
+
 function renderAdminList(){
   const root=document.getElementById("adminList");
   if(!root)return;
   const rows=Object.values(streamLinks);
-  if(!rows.length){root.innerHTML='<p class="small">Пока нет добавленных ссылок.</p>';return}
-  root.innerHTML=rows.map(row=>`<div class="admin-item"><span>${escapeHTML(row.movie_id)} — ссылка добавлена</span><button onclick="deleteMovieLink('${escapeHTML(row.movie_id).replace(/'/g,"&#39;")}')">Удалить</button></div>`).join("");
+  if(!rows.length){
+    root.innerHTML='<p class="small">Пока нет добавленных ссылок.</p>';return;
+  }
+  root.innerHTML=rows.map(row=>`
+    <div class="admin-item">
+      <span>${escapeHTML(row.movie_id)} — ссылка добавлена</span>
+      <button onclick="deleteMovieLink(${JSON.stringify(row.movie_id)})">Удалить</button>
+    </div>`).join("");
 }
 
 /* КАТАЛОГ */
 function renderFilters(){
-  document.getElementById("filters").innerHTML=genres.map(g=>`<button class="${currentGenre===g?'active':''}" onclick="setGenre('${g}')">${g}</button>`).join("");
+  document.getElementById("filters").innerHTML=genres.map(g=>
+    <button class="${currentGenre===g?"active":""}" onclick="setGenre(${JSON.stringify(g)})">${escapeHTML(g)}</button>
+  ).join("");
 }
 function setGenre(g){currentGenre=g;currentMode="all";renderMovies()}
 function showAll(){currentMode="all";currentGenre="Все";renderMovies()}
 function showFavorites(){currentMode="favorites";currentGenre="Все";renderMovies()}
 function showLater(){currentMode="later";currentGenre="Все";renderMovies()}
+
 function renderMovies(){
   renderFilters();
   let list=films.map((f,i)=>({f,i}));
-  const search=document.
-    getElementById("search").value.trim().toLowerCase();
+  const search=document.getElementById("search").value.trim().toLowerCase();
   if(currentMode==="favorites")list=list.filter(x=>favorites.includes(x.i));
   if(currentMode==="later")list=list.filter(x=>later.includes(x.i));
   if(currentGenre!=="Все")list=list.filter(x=>x.f[3]===currentGenre);
@@ -463,10 +496,20 @@ function renderMovies(){
   if(sort==="rating")list.sort((a,b)=>b.f[4]-a.f[4]);
   if(sort==="year")list.sort((a,b)=>b.f[2]-a.f[2]);
   if(sort==="old")list.sort((a,b)=>a.f[2]-b.f[2]);
-  document.getElementById("heading").textContent=currentMode==="favorites"?"Избранное":currentMode==="later"?"Посмотреть позже":currentGenre==="Все"?"Популярные фильмы":currentGenre;
+
+  document.getElementById("heading").textContent=
+    currentMode==="favorites"?"Избранное":
+    currentMode==="later"?"Посмотреть позже":
+    currentGenre==="Все"?"Популярные фильмы":currentGenre;
   document.getElementById("count").textContent="Фильмов: "+list.length;
+
   const root=document.getElementById("movies");
-  if(!list.length){root.innerHTML='<div class="empty">Здесь пока пусто. Выбери фильм и добавь его в свою коллекцию.</div>';return}
+  if(!list.length){
+    root.
+      innerHTML='<div class="empty">Здесь пока пусто. Выбери фильм и добавь его в свою коллекцию.</div>';
+    return;
+  }
+
   root.innerHTML=list.map(({f,i})=>`
     <article class="movie">
       <div class="poster" id="poster-${i}">${escapeHTML(f[0])}</div>
@@ -481,14 +524,20 @@ function renderMovies(){
         </div>
       </div>
     </article>`).join("");
+
   list.forEach(({i})=>loadPoster(i));
 }
+
+/* ПОСТЕРЫ */
 function putPoster(i,url){
-  const holder=document.getElementById("poster-"+i);if(!holder)return;
-  const img=document.createElement("img");img.alt=films[i][0];img.loading="lazy";img.src=url;
+  const holder=document.getElementById("poster-"+i);
+  if(!holder)return;
+  const img=document.createElement("img");
+  img.alt=films[i][0];img.loading="lazy";img.src=url;
   img.onerror=()=>{img.remove();holder.textContent=films[i][0]};
   holder.replaceChildren(img);
 }
+
 async function loadPoster(i){
   const holder=document.getElementById("poster-"+i);
   if(!holder||posterLoading.has(i))return;
@@ -497,23 +546,37 @@ async function loadPoster(i){
   try{
     const query=encodeURIComponent(films[i][1]+" film");
     const url="https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch="+query+"&gsrlimit=5&prop=pageimages&piprop=thumbnail&pithumbsize=600&format=json&origin=*";
-    const response=await fetch(url);if(!response.ok)throw new Error("Image request failed");
-    const data=await response.json();const pages=Object.values(data.query?.pages||{});
+    const response=await fetch(url);
+    if(!response.ok)throw new Error("Image request failed");
+    const data=await response.json();
+    const pages=Object.values(data.query?.pages||{});
     const found=pages.find(p=>p.thumbnail?.source);
-    if(found){posterCache[i]=found.thumbnail.source;save("kmf_posters",posterCache);putPoster(i,posterCache[i])}
-  }catch(e){console.log("Изображение недоступно:",films[i][0])}
+    if(found){
+      posterCache[i]=found.thumbnail.source;
+      save("kmf_posters",posterCache);
+      putPoster(i,posterCache[i]);
+    }
+  }catch(error){console.log("Постер недоступен:",films[i][0])}
   finally{posterLoading.delete(i)}
 }
+
+/* ИЗБРАННОЕ И СПИСОК */
 function toggleFavorite(i){
   favorites=favorites.includes(i)?favorites.filter(x=>x!==i):[...favorites,i];
-  save("kmf_favorites",favorites);toast(favorites.includes(i)?"Добавлено в избранное":"Удалено из избранного");renderMovies();
+  save("kmf_favorites",favorites);
+  toast(favorites.includes(i)?"Добавлено в избранное":"Удалено из избранного");
+  renderMovies();
 }
 function toggleLater(i){
   later=later.includes(i)?later.filter(x=>x!==i):[...later,i];
-  save("kmf_later",later);toast(later.includes(i)?"Добавлено в список":"Удалено из списка");renderMovies();
+  save("kmf_later",later);
+  toast(later.includes(i)?"Добавлено в список":"Удалено из списка");
+  renderMovies();
 }
+
+/* КАРТОЧКА И ПРОИГРЫВАТЕЛЬ */
 function openMovie(i){
-  const f=films[i],poster=posterCache[i],link=streamLinks[makeId(f[0])];
+  const f=films[i],poster=posterCache[i],link=streamLinks[f[0]];
   const hasVideo=!!link?.video_url;
   document.getElementById("modalContent").innerHTML=`
     <button class="close" onclick="closeModal()">✕</button>
@@ -522,7 +585,7 @@ function openMovie(i){
     <div class="meta">${f[2]} · ${escapeHTML(f[3])} · ★ ${f[4]}</div>
     <p>${escapeHTML(f[5])}</p>
     <div class="modal-buttons">
-      ${hasVideo?`<button onclick="playMovie(${i})">▶️ Смотреть полностью</button>`:"<span class='small'>Полная версия пока не добавлена</span>"}
+      ${hasVideo?`<button onclick="playMovie(${i})">▶️ Смотреть видео</button>`:"<span class='small'>Видео пока не добавлено</span>"}
       <button onclick="toggleFavorite(${i});openMovie(${i})">${favorites.includes(i)?"♥️ В избранном":"♡ В избранное"}</button>
       <button onclick="toggleLater(${i});openMovie(${i})">${later.includes(i)?"Убрать из списка":"＋ Посмотреть позже"}</button>
       <button onclick="trailer(${i})">▶️ Найти трейлер</button>
@@ -530,39 +593,72 @@ function openMovie(i){
     <div id="playerArea"></div>`;
   document.getElementById("modal").classList.add("show");
 }
+
+function playMovie(i){
+  const link=streamLinks[films[i][0]];
+  if(!link?.video_url){toast("Для этого фильма пока нет ссылки");return}
+  const source=videoSource(link.video_url);
+  if(!source){toast("Ссылка не поддерживается");return}
+  const player=source.type==="iframe"
+    ?`<iframe src="${escapeHTML(source.url)}" title="${escapeHTML(films[i][0])}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>`
+    :`<video controls playsinline preload="metadata" src="${escapeHTML(source.url)}"></video>`;
+  const box=document.getElementById("playerArea");
+  if(!box)return;
+  box.innerHTML=`<div class="player-label">▶️ ${escapeHTML(films[i][0])}</div><div class="player-wrap">${player}</div>`;
+  box.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
 function closeModal(){
   document.getElementById("modal").classList.remove("show");
   document.getElementById("modalContent").innerHTML="";
 }
+
 function trailer(i){
-  const saved=streamLinks[makeId(films[i][0])]?.trailer_url;
-  if(saved){window.open(saved,"_blank","noopener,noreferrer");return}
+  const saved=streamLinks[films[i][0]]?.trailer_url;
+  if(saved&&safeHttpsUrl(saved)){window.open(saved,"_blank","noopener,noreferrer");return}
   const q=encodeURIComponent(films[i][0]+" trailer");
   window.open("https://www.youtube.com/results?search_query="+q,"_blank","noopener,noreferrer");
 }
+
 function randomMovie(){openMovie(Math.floor(Math.random()*films.length))}
 function movieOfDay(){const day=Math.floor(Date.now()/86400000);openMovie(day%films.length)}
 function profile(){
   const name=prompt("Как тебя называть?",profileName);
   if(name===null)return;
-  profileName=name.trim()||"Гость";save("kmf_name",profileName);toast("Привет, "+profileName+"!");
+  profileName=name.trim()||"Гость";
+  save("kmf_name",profileName);
+  toast("Привет, "+profileName+"!");
 }
 
-/* ЗАПУСК */
-renderMovies();
-fillAdminSelect();
-
-if(db){
-  db.auth.onAuthStateChange((_event,session)=>{
-    currentUser=session?.user||null;
-    setTimeout(()=>checkAdmin(),0);
-  });
-  refreshAuth();
-  loadPublicLinks();
-}else{
-  console.error("Supabase SDK или настройки подключения недоступны");
-  toast("Не удалось подключить Supabase. Проверь интернет и настройки.");
+/* ЗАПУСК САЙТА */
+function startCatalog(){
+  renderMovies();
+  fillAdminSelect();
 }
+
+async function startSupabase(){
+  if(!db){
+    console.warn("Supabase не загрузился. Каталог работает автономно.");
+    return;
+  }
+  try{
+    const {data,error}=await db.auth.getSession();
+    if(error)throw error;
+    currentUser=data.session?.user||null;
+    await checkAdmin();
+    await loadPublicLinks();
+    db.auth.onAuthStateChange((_event,session)=>{
+      currentUser=session?.user||null;
+      setTimeout(()=>checkAdmin(),0);
+    });
+  }catch(error){
+    console.error("Supabase:",error);
+    toast("Каталог работает, но подключение к аккаунту временно недоступно.");
+  }
+}
+
+startCatalog();
+startSupabase();
 </script>
 </body>
 </html>
