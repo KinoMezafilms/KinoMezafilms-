@@ -136,9 +136,7 @@ input,select{
  opacity:0;
  transition:opacity .25s;
 }
-.poster img.loaded{
- opacity:1;
-}
+.poster img.loaded{opacity:1}
 .poster-fallback{
  position:absolute;
  inset:0;
@@ -370,70 +368,83 @@ const favorites=new Set(
 const later=new Set(
  JSON.parse(localStorage.getItem("km_later")||"[]")
 );
+
+/* ХРАНИЛИЩЕ ПОСТЕРОВ */
+
+const POSTER_DB_NAME="KinoMezafilmsPosters";
+const POSTER_STORE_NAME="posters";
 const posterCache=new Map();
+const posterRequests=new Map();
 
-function esc(s){
- return String(s).replace(/[&<>"']/g,c=>({
-  "&":"&amp;",
-  "<":"&lt;",
-  ">":"&gt;",
-  '"':"&quot;",
-  "'":"&#39;"
- }[c]));
+let posterDBPromise=null;
+
+function openPosterDB(){
+ if(posterDBPromise)return posterDBPromise;
+
+ posterDBPromise=new Promise((resolve,reject)=>{
+  if(!("indexedDB" in window)){
+   reject(new Error("IndexedDB недоступен"));
+   return;
+  }
+
+  const request=indexedDB.open(POSTER_DB_NAME,1);
+
+  request.onupgradeneeded=()=>{
+   const db=request.result;
+
+   if(!db.objectStoreNames.contains(POSTER_STORE_NAME)){
+    db.createObjectStore(POSTER_STORE_NAME);
+   }
+  };
+
+  request.onsuccess=()=>resolve(request.result);
+  request.onerror=()=>reject(request.error);
+ });
+
+ posterDBPromise.catch(()=>{
+  posterDBPromise=null;
+ });
+
+ return posterDBPromise;
 }
 
-function save(){
- localStorage.setItem(
-  "km_favorites",
-  JSON.stringify([...favorites])
- );
- localStorage.setItem(
-  "km_later",
-  JSON.stringify([...later])
- );
+async function getSavedPoster(id){
+ const db=await openPosterDB();
+
+ return new Promise((resolve,reject)=>{
+  const transaction=db.transaction(POSTER_STORE_NAME,"readonly");
+  const request=transaction.objectStore(POSTER_STORE_NAME).get(id);
+
+  request.onsuccess=()=>resolve(request.result||null);
+  request.onerror=()=>reject(request.error);
+ });
 }
 
-/* ПОСТЕРЫ: СОХРАНЕНИЕ В БРАУЗЕРЕ */
+async function savePoster(id,blob){
+ const db=await openPosterDB();
 
-function posterStorageKey(id){
- return "km_poster_" + id;
+ return new Promise((resolve,reject)=>{
+  const transaction=db.transaction(POSTER_STORE_NAME,"readwrite");
+
+  transaction.objectStore(POSTER_STORE_NAME).put(blob,id);
+
+  transaction.oncomplete=()=>resolve(true);
+  transaction.onerror=()=>reject(transaction.error);
+  transaction.onabort=()=>reject(transaction.error);
 }
 
-function getSavedPoster(id){
+);
+}
+
+function getLegacyPoster(id){
  try{
-  return localStorage.getItem(posterStorageKey(id));
+  return localStorage.getItem("km_poster_"+id);
  }catch(error){
   return null;
  }
 }
 
-function savePoster(id,url){
- try{
-  localStorage.setItem(posterStorageKey(id),url);
- }catch(error){
-  console.warn("Не удалось сохранить постер:",error);
- }
-}
-
-function removeSavedPoster(id){
- try{
-  localStorage.removeItem(posterStorageKey(id));
- }catch(error){}
- posterCache.delete(id);
-}
-
-async function getPoster(movie){
- if(posterCache.has(movie.id)){
-  return posterCache.get(movie.id);
- }
-
- const saved=getSavedPoster(movie.id);
-
- if(saved){
-  posterCache.set(movie.id,saved);
-  return saved;
- }
-
+async function findPosterUrl(movie){
  const title=movie.wiki.replace(/ /g,"_");
 
  const requests=[
@@ -470,23 +481,103 @@ async function getPoster(movie){
   }
  ];
 
- let image=null;
-
  for(const request of requests){
   try{
-   image=await request();
-   if(image)break;
+   const image=await request();
+   if(image)return image;
   }catch(error){
    console.warn("Источник постера недоступен:",error);
   }
  }
 
- if(image){
-  posterCache.set(movie.id,image);
-  savePoster(movie.id,image);
+ return null;
+}
+
+async function downloadAndSavePoster(id,imageUrl){
+ const response=await fetch(imageUrl,{mode:"cors"});
+
+ if(!response.ok){
+  throw new Error("Не удалось скачать изображение");
  }
 
- return image;
+ const blob=await response.blob();
+
+ if(!blob.type.startsWith("image/")||blob.size===0){
+  throw new Error("Получен некорректный файл изображения");
+ }
+
+ await savePoster(id,blob);
+
+ const localUrl=URL.createObjectURL(blob);
+ posterCache.set(id,localUrl);
+
+ return localUrl;
+}
+
+async function getPoster(movie){
+ if(posterCache.has(movie.id)){
+  return posterCache.get(movie.id);
+ }
+
+ if(posterRequests.has(movie.id)){
+  return posterRequests.get(movie.id);
+ }
+
+ const task=(async()=>{
+  // 1. Сначала используем уже сохранённый файл.
+  try{
+   const savedBlob=await getSavedPoster(movie.id);
+
+   if(savedBlob instanceof Blob&&savedBlob.size>0){
+    const localUrl=URL.createObjectURL(savedBlob);
+    posterCache.set(movie.id,localUrl);
+    return localUrl;
+   }
+  }catch(error){
+   console.warn("Не удалось прочитать сохранённый постер:",error);
+  }
+
+  // 2. Проверяем старую ссылку из предыдущей версии сайта.
+  const oldUrl=getLegacyPoster(movie.id);
+
+  if(oldUrl){
+   try{
+    return await downloadAndSavePoster(movie.id,oldUrl);
+   }catch(error){
+    console.warn("Старая ссылка не сработала:",error);
+   }
+  }
+
+  // 3. Ищем новый адрес постера.
+  const imageUrl=await findPosterUrl(movie);
+
+  if(!imageUrl)return null;
+
+  // 4. Сохраняем сам файл, если источник разрешает скачивание.
+  try{
+   return await downloadAndSavePoster(movie.id,imageUrl);
+  }catch(error){
+   console.warn("Не удалось сохранить файл постера:",error);
+
+   // Показываем изображение по исходной ссылке.
+   // Не удаляем ранее сохранённые данные.
+   posterCache.set(movie.id,imageUrl);
+
+   try{
+    localStorage.setItem("km_poster_"+movie.id,imageUrl);
+   }catch(storageError){}
+
+   return imageUrl;
+  }
+ })();
+
+ posterRequests.set(movie.id,task);
+
+ try{
+  return await task;
+ }finally{
+  posterRequests.delete(movie.id);
+ }
 }
 
 function loadPoster(movie,container){
@@ -495,10 +586,7 @@ function loadPoster(movie,container){
 
  if(!img||!fallback)return;
 
- let finished=false;
-
  img.onload=()=>{
-  finished=true;
   img.classList.add("loaded");
   fallback.style.display="none";
  };
@@ -507,21 +595,43 @@ function loadPoster(movie,container){
   img.classList.remove("loaded");
   fallback.style.display="flex";
 
-  if(!finished){
-   removeSavedPoster(movie.id);
-  }
+  // Важно: больше не удаляем сохранённые постеры.
+  console.warn("Не удалось показать постер:",movie.title);
  };
 
  getPoster(movie).then(url=>{
-  if(!url)return;
-  if(!container.isConnected)return;
+  if(!url||!container.isConnected)return;
 
-  if(img.src!==url){
+  if(img.dataset.posterSrc!==url){
+   img.dataset.posterSrc=url;
    img.src=url;
   }
  }).catch(error=>{
   console.warn("Ошибка постера:",movie.title,error);
  });
+}
+
+/* СОХРАНЕНИЕ ИЗБРАННОГО */
+
+function esc(s){
+ return String(s).replace(/[&<>"']/g,c=>({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+ }[c]));
+}
+
+function save(){
+ localStorage.setItem(
+  "km_favorites",
+  JSON.stringify([...favorites])
+ );
+ localStorage.setItem(
+  "km_later",
+  JSON.stringify([...later])
+ );
 }
 
 /* ЖАНРЫ И КАТАЛОГ */
