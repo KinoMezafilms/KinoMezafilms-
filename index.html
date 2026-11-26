@@ -1,8 +1,4 @@
-function renderFilters(){
-document.getElementById("filters").innerHTML=genres.map(g=>
-<button class="${currentGenre===g?"active":""}" onclick="setGenre(${JSON.stringify(g)})">${escapeHTML(g)}</button>
-).join("");
-}
+
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -438,10 +434,11 @@ async function deleteMovieLink(title){
   if(error)throw error;
   await loadAdminLinks();toast("Ссылка удалена");
  }catch(error){toast("Ошибка удаления: "+error.message)}
+function renderFilters(){
+document.getElementById("filters").innerHTML=genres.map(g=>
+<button class="${currentGenre===g?"active":""}" onclick="setGenre(${JSON.stringify(g)})">${escapeHTML(g)}</button>
+).join("");
 }
-function renderAdminList(){
- const root=document.getElementById("adminList");
- if(!root)return;
  const rows=Object.values(streamLinks);
  if(!rows.length){root.innerHTML='<p class="small">Пока нет добавленных ссылок.</p>';return}
  root.innerHTML=rows.map(row=>`
