@@ -1,4 +1,5 @@
-[26.11.2026 12:37] KinoMezafilms: <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -121,7 +122,7 @@ main{max-width:1250px;margin:auto;padding:24px 18px 60px}
 }
 footer{
   text-align:center;padding:25px;color:var(--muted);
-[26.11.2026 12:37] KinoMezafilms: border-top:1px solid var(--border);font-size:13px;
+  border-top:1px solid var(--border);font-size:13px;
 }
 .modal{
   display:none;position:fixed;inset:0;z-index:50;
@@ -142,6 +143,7 @@ footer{
 }
 .detail-layout{display:grid;grid-template-columns:170px 1fr;gap:18px}
 .detail-layout img{width:100%;border-radius:12px}
+.detail-description{color:#d1cde0;line-height:1.55}
 .video-frame{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#000}
 .admin-box{display:none;margin-top:28px;padding:20px;background:#19152a;border:1px solid #7542a4;border-radius:18px}
 .admin-box.show{display:block}
@@ -223,7 +225,7 @@ footer{
     </div>
     <div class="notice" id="adminMessage">Панель администратора активна.</div>
   </section>
-[26.11.2026 12:37] KinoMezafilms: </main>
+</main>
 
 <footer>
   KinoMezafilms © 2026 · Мир кино начинается здесь
@@ -280,8 +282,7 @@ const movies = [
 {id:"shawshank",title:"Побег из Шоушенка",year:1994,genre:"Драма",rating:9.3,description:"Банкир оказывается в тюрьме и не теряет надежды на свободу.",wiki:"The Shawshank Redemption"},
 {id:"greenmile",title:"Зелёная миля",year:1999,genre:"Драма",rating:8.6,description:"Надзиратель встречает необычного заключённого с удивительным даром.",wiki:"The Green Mile (film)"},
 {id:"forrest",title:"Форрест Гамп",year:1994,genre:"Драма",rating:8.8,description:"Необычная жизнь человека, который случайно становится свидетелем истории.",wiki:"Forrest Gump"},
-{id:"joker",title:"Джокер",year:2019,genre:"Драма",rating:8.
-[26.11.2026 12:37] KinoMezafilms: 4,description:"История человека, постепенно теряющего связь с реальностью.",wiki:"Joker (2019 film)"},
+{id:"joker",title:"Джокер",year:2019,genre:"Драма",rating:8.4,description:"История человека, постепенно теряющего связь с реальностью.",wiki:"Joker (2019 film)"},
 {id:"hangover",title:"Мальчишник в Вегасе",year:2009,genre:"Комедия",rating:7.7,description:"Друзья пытаются восстановить события безумной ночи в Лас-Вегасе.",wiki:"The Hangover"},
 {id:"mask",title:"Маска",year:1994,genre:"Комедия",rating:7.0,description:"Обычный банковский служащий находит волшебную маску.",wiki:"The Mask (1994 film)"},
 {id:"homealone",title:"Один дома",year:1990,genre:"Комедия",rating:7.7,description:"Мальчик остаётся один дома и защищает его от грабителей.",wiki:"Home Alone"},
@@ -303,8 +304,7 @@ const movies = [
 {id:"ironman",title:"Железный человек",year:2008,genre:"Боевик",rating:7.9,description:"Изобретатель создаёт высокотехнологичный костюм и становится героем.",wiki:"Iron Man (2008 film)"},
 {id:"deadpool",title:"Дэдпул",year:2016,genre:"Комедия",rating:8.0,description:"Необычный антигерой отправляется на поиски человека, изменившего его жизнь.",wiki:"Deadpool (film)"},
 {id:"logan",title:"Логан",year:2017,genre:"Боевик",rating:8.1,description:"Постаревший герой пытается защитить девочку с необычными способностями.",wiki:"Logan (film)"},
-{id:"whiplash",title:"Одержимость",year:2014,genre:"Драма",rating:8.
-[26.11.2026 12:37] KinoMezafilms: 5,description:"Молодой барабанщик сталкивается с жестокими методами преподавателя.",wiki:"Whiplash (2014 film)"},
+{id:"whiplash",title:"Одержимость",year:2014,genre:"Драма",rating:8.5,description:"Молодой барабанщик сталкивается с жестокими методами преподавателя.",wiki:"Whiplash (2014 film)"},
 {id:"prestige",title:"Престиж",year:2006,genre:"Триллер",rating:8.5,description:"Два иллюзиониста превращают соперничество в опасную игру.",wiki:"The Prestige (film)"},
 {id:"shutter",title:"Остров проклятых",year:2010,genre:"Триллер",rating:8.2,description:"Детектив расследует исчезновение пациентки психиатрической лечебницы.",wiki:"Shutter Island"},
 {id:"se7en",title:"Семь",year:1995,genre:"Триллер",rating:8.6,description:"Детективы расследуют серию преступлений, связанных с семью грехами.",wiki:"Seven (1995 film)"},
@@ -352,7 +352,7 @@ async function loadPoster(movie,img){
     if(!response.ok)throw new Error("Poster request failed");
     const data=await response.json();
     const pages=data.query&&data.query.pages?Object.values(data.query.pages):[];
-[26.11.2026 12:37] KinoMezafilms: const src=pages[0]&&pages[0].thumbnail&&pages[0].thumbnail.source;
+    const src=pages[0]&&pages[0].thumbnail&&pages[0].thumbnail.source;
     if(src){img.src=src;img.style.display="block";img.previousElementSibling?.remove();}
   }catch(e){
     img.style.display="none";
@@ -365,7 +365,7 @@ function posterElement(movie){
 }
 function renderFilters(){
   document.getElementById("filters").innerHTML=genres.map(g=>
-    <button class="filter ${currentGenre===g?"active":""}" onclick="setGenre(${JSON.stringify(g)})">${escapeHTML(g)}</button>
+    `<button class="filter ${currentGenre===g?"active":""}" onclick="setGenre(${JSON.stringify(g)})">${escapeHTML(g)}</button>`
   ).join("");
 }
 function setGenre(genre){
@@ -454,8 +454,7 @@ function openMovie(id){
       <div>
         <p class="muted">${m.year} · ${escapeHTML(m.genre)} · ★ ${m.rating}</p>
         <p class="detail-description">${escapeHTML(m.description)}</p>
-        <button class="btn" onclick="toggleFavorite('${m.id}')">${favorites.has(m.
-[26.11.2026 12:37] KinoMezafilms: id)?"Убрать из избранного":"В избранное"}</button>
+        <button class="btn" onclick="toggleFavorite('${m.id}')">${favorites.has(m.id)?"Убрать из избранного":"В избранное"}</button>
         <button class="btn" onclick="toggleLater('${m.id}')">${later.has(m.id)?"Убрать из списка":"Посмотреть позже"}</button>
       </div>
     </div>
@@ -548,8 +547,7 @@ async function checkAdmin(){
     const {data}=await db.auth.getUser();
     currentUser=data&&data.user?data.user:null;
     if(!currentUser)return false;
-    const {data:allowed,error}=await db.
-[26.11.2026 12:37] KinoMezafilms: rpc("is_site_admin");
+    const {data:allowed,error}=await db.rpc("is_site_admin");
     if(error)throw error;
     isAdmin=allowed===true;
   }catch(e){
@@ -565,7 +563,7 @@ async function logout(){
 }
 function fillAdminSelect(){
   document.getElementById("adminMovie").innerHTML=movies.map(m=>
-    <option value="${m.id}">${escapeHTML(m.title)}</option>
+    `<option value="${m.id}">${escapeHTML(m.title)}</option>`
   ).join("");
 }
 async function saveMovieLinks(){
