@@ -160,11 +160,14 @@ const SUPABASE_URL="https://randamxoghulcnjncybw.supabase.co";
 const SUPABASE_KEY="sb_publishable_WNSviuHLFahwoS5_hB53Cw_2MQpECdi";
 
 let db=null,currentUser=null,isAdmin=false,streamLinks={};
+
 try{
   if(window.supabase){
     db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
   }
-}catch(error){console.error("Supabase:",error)}
+}catch(error){
+  console.error("Supabase:",error);
+}
 
 /* КАТАЛОГ */
 const films=[
@@ -267,6 +270,7 @@ const films=[
 ];
 
 const genres=["Все","Боевик","Комедия","Драма","Фантастика","Триллер","Ужасы","Приключения","Фэнтези","Мультфильм","Криминал","Детектив","Мелодрама"];
+
 let currentGenre="Все",currentMode="all";
 let favorites=load("kmf_favorites",[]);
 let later=load("kmf_later",[]);
@@ -279,21 +283,33 @@ if(!Array.isArray(later))later=[];
 if(!posterCache||typeof posterCache!=="object"||Array.isArray(posterCache))posterCache={};
 
 function load(key,fallback){
-  try{const value=localStorage.getItem(key);return value?JSON.parse(value):fallback}
-  catch(error){return fallback}
+  try{
+    const value=localStorage.getItem(key);
+    return value?JSON.parse(value):fallback;
+  }catch(error){
+    return fallback;
+  }
 }
+
 function save(key,value){
-  try{localStorage.setItem(key,JSON.stringify(value))}catch(error){}
+  try{localStorage.setItem(key,JSON.stringify(value));}
+  catch(error){console.warn("Не удалось сохранить настройки:",error);}
 }
+
 function toast(message){
   const el=document.getElementById("toast");
-  el.textContent=message;el.style.display="block";
+  if(!el)return;
+  el.
+    textContent=message;
+  el.style.display="block";
   clearTimeout(toast.timer);
-  toast.timer=setTimeout(()=>el.style.
-    display="none",2800);
+  toast.timer=setTimeout(()=>el.style.display="none",2800);
 }
+
 function escapeHTML(value){
-  return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  return String(value).replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
 }
 
 /* АВТОРИЗАЦИЯ */
@@ -301,7 +317,10 @@ function openLogin(){
   document.getElementById("loginMessage").textContent="";
   document.getElementById("loginModal").classList.add("show");
 }
-function closeLogin(){document.getElementById("loginModal").classList.remove("show")}
+
+function closeLogin(){
+  document.getElementById("loginModal").classList.remove("show");
+}
 
 function updateAuthUI(){
   document.getElementById("loginButton").style.display=currentUser?"none":"inline-block";
@@ -312,14 +331,19 @@ function updateAuthUI(){
 
 async function checkAdmin(){
   isAdmin=false;
+
   if(currentUser&&db){
     try{
       const {data,error}=await db.rpc("is_site_admin");
       if(error)console.error("Проверка прав:",error);
       else isAdmin=data===true;
-    }catch(error){console.error(error)}
+    }catch(error){
+      console.error("Ошибка проверки администратора:",error);
+    }
   }
+
   updateAuthUI();
+
   if(isAdmin){
     fillAdminSelect();
     await loadAdminLinks();
@@ -327,18 +351,31 @@ async function checkAdmin(){
 }
 
 async function login(){
-  if(!db){toast("Supabase не подключён");return}
+  if(!db){
+    toast("Supabase не подключён");
+    return;
+  }
+
   const email=document.getElementById("email").value.trim();
   const password=document.getElementById("password").value;
   const message=document.getElementById("loginMessage");
   const button=document.getElementById("loginSubmit");
-  if(!email||!password){message.textContent="Введи почту и пароль.";return}
-  button.disabled=true;message.textContent="Выполняется вход...";
+
+  if(!email||!password){
+    message.textContent="Введи почту и пароль.";
+    return;
+  }
+
+  button.disabled=true;
+  message.textContent="Выполняется вход...";
+
   try{
     const {data,error}=await db.auth.signInWithPassword({email,password});
     if(error)throw error;
+
     currentUser=data.user;
     await checkAdmin();
+
     if(!isAdmin){
       await db.auth.signOut();
       currentUser=null;
@@ -346,153 +383,306 @@ async function login(){
       message.textContent="У этого аккаунта нет прав администратора.";
       return;
     }
-    closeLogin();toast("Вход администратора выполнен");
+
+    closeLogin();
+    toast("Вход администратора выполнен");
   }catch(error){
     message.textContent="Ошибка входа: "+(error.message||"Неизвестная ошибка");
-  }finally{button.disabled=false}
+  }finally{
+    button.disabled=false;
+  }
 }
 
 async function logout(){
   if(!db)return;
-  try{await db.auth.signOut()}catch(error){console.error(error)}
-  currentUser=null;isAdmin=false;streamLinks={};
-  updateAuthUI();renderMovies();
+
+  try{
+    await db.auth.signOut();
+  }catch(error){
+    console.error(error);
+  }
+
+  currentUser=null;
+  isAdmin=false;
+  streamLinks={};
+  updateAuthUI();
+  renderMovies();
   toast("Ты вышел из аккаунта");
 }
 
 function toggleAdmin(){
   if(!isAdmin)return;
+
   const panel=document.getElementById("adminPanel");
   panel.classList.toggle("show");
-  if(panel.classList.contains("show"))panel.scrollIntoView({behavior:"smooth"});
+
+  if(panel.classList.contains("show")){
+    panel.scrollIntoView({behavior:"smooth"});
+  }
 }
 
 /* ССЫЛКИ НА ВИДЕО */
 function safeHttpsUrl(value){
   try{
-    const url=new URL(value.trim());
-    return url.protocol==="https:"?url:null;
-  }catch(error){return null}
+    const url=new URL(String(value).trim());
+    if(url.protocol!=="https:")return null;
+    if(url.username||url.password)return null;
+    return url;
+  }catch(error){
+    return null;
+  }
 }
 
 function videoSource(raw){
   const url=safeHttpsUrl(raw);
   if(!url)return null;
+
   const host=url.hostname.toLowerCase().replace(/^www\./,"");
+
   if(["youtube.com","m.youtube.com","youtu.be","youtube-nocookie.com"].includes(host)){
     let id="";
+
     if(host==="youtu.be")id=url.pathname.slice(1);
     else if(url.pathname==="/watch")id=url.searchParams.get("v")||"";
     else if(url.pathname.startsWith("/embed/"))id=url.pathname.split("/")[2]||"";
     else if(url.pathname.startsWith("/shorts/"))id=url.pathname.split("/")[2]||"";
+
     if(!/^[a-zA-Z0-9_-]{6,20}$/.test(id))return null;
-    return {type:"iframe",url:"https://www.youtube-nocookie.com/embed/"+id};
+
+    return {
+      type:"iframe",
+      url:"https://www.youtube-nocookie.com/embed/"+id
+    };
   }
+
   if(host==="vimeo.com"||host==="player.vimeo.com"){
     const match=url.pathname.match(/(?:video\/)?(\d+)/);
     if(!match)return null;
-    return {type:"iframe",url:"https://player.vimeo.com/video/"+match[1]};
+
+    return {
+      type:"iframe",
+      url:"https://player.vimeo.com/video/"+match[1]
+    };
   }
-  if(/\.(mp4|webm|m3u8)$/i.test(url.pathname)){
+
+  if(/\.(mp4|webm)$/i.test(url.pathname)){
     return {type:"video",url:url.href};
   }
+
   return null;
 }
 
 async function loadPublicLinks(){
   if(!db)return;
+
   try{
-    const {data,error}=await db.from("movie_streams").select("movie_id,video_url,trailer_url");
-    if(error){console.error("Загрузка видео:",error);return}
+    const {data,error}=await db.from("movie_streams")
+      .select("movie_id,video_url,trailer_url");
+
+    if(error){
+      console.error("Загрузка видео:",error);
+      return;
+    }
+
     streamLinks={};
-    (data||[]).forEach(row=>streamLinks[row.movie_id]=row);
+    (data||[]).forEach(row=>{
+      streamLinks[row.movie_id]=row;
+    });
+
     renderMovies();
-  }catch(error){console.
-    error("Ошибка загрузки видео:",error)}
+  }catch(error){
+    console.error("Ошибка загрузки видео:",error);
+  }
 }
 
 async function loadAdminLinks(){
   if(!db||!isAdmin)return;
+
   try{
-    const {data,error}=await db.from("movie_streams").select("*").order("movie_id");
-    if(error){console.error(error);toast("Не удалось загрузить ссылки: "+error.message);return}
+    const {data,error}=await db.from("movie_streams")
+      .select("*")
+      .order("movie_id");
+
+    if(error){
+      console.error(error);
+      toast("Не удалось загрузить ссылки: "+error.message);
+      return;
+    }
+
     streamLinks={};
-    (data||[]).forEach(row=>streamLinks[row.movie_id]=row);
-    renderAdminList();renderMovies();
-  }catch(error){console.error(error)}
+    (data||[]).forEach(row=>{
+      streamLinks[row.movie_id]=row;
+    });
+
+    renderAdminList();
+    renderMovies();
+  }catch(error){
+    console.error(error);
+  }
 }
 
 function fillAdminSelect(){
   const select=document.getElementById("adminMovie");
   if(!select)return;
-  select.innerHTML=films.map(f=>`<option value="${escapeHTML(f[0])}">${escapeHTML(f[0])}</option>`).join("");
+
+  select.innerHTML=films.map(f=>
+    <option value="${escapeHTML(f[0])}">${escapeHTML(f[0])}</option>
+  ).join("");
 }
 
 async function saveMovieLink(){
-  if(!isAdmin||!db||!currentUser){toast("Нет прав администратора");return}
+  if(!isAdmin||!db||!currentUser){
+    toast("Нет прав администратора");
+    return;
+  }
+
   const title=document.getElementById("adminMovie").value;
   const video=document.getElementById("videoUrl").value.trim();
   const trailer=document.getElementById("trailerUrl").value.trim();
-  if(!title||!video){toast("Выбери фильм и укажи ссылку");return}
-  if(!videoSource(video)){toast("Неподдерживаемая ссылка на видео");return}
-  if(trailer&&!safeHttpsUrl(trailer)){toast("Ссылка на трейлер должна начинаться с https://");return}
+
+  if(!title||!video){
+    toast("Выбери фильм и укажи ссылку");
+    return;
+  }
+
+  if(!videoSource(video)){
+    toast("Неподдерживаемая ссылка на видео");
+    return;
+  }
+
+  if(trailer&&!safeHttpsUrl(trailer)){
+    toast("Ссылка на трейлер должна начинаться с https://");
+    return;
+  }
+
   try{
     const {error}=await db.from("movie_streams").upsert({
-      movie_id:title,video_url:video,trailer_url:trailer||null,
-      updated_at:new Date().toISOString(),updated_by:currentUser.id
+      movie_id:title,
+      video_url:video,
+      trailer_url:trailer||null,
+      updated_at:new Date().toISOString(),
+      updated_by:currentUser.id
     },{onConflict:"movie_id"});
+
     if(error)throw error;
+
     document.getElementById("videoUrl").value="";
     document.getElementById("trailerUrl").value="";
+
     await loadAdminLinks();
     toast("Ссылка сохранена");
-  }catch(error){toast("Ошибка сохранения: "+error.message)}
+  }catch(error){
+    toast("Ошибка сохранения: "+error.message);
+  }
 }
 
 async function deleteMovieLink(title){
   if(!isAdmin||!db)return;
+
   if(!confirm("Удалить ссылку для фильма «"+title+"»?"))return;
+
   try{
-    const {error}=await db.from("movie_streams").delete().eq("movie_id",title);
+    const {error}=await db.from("movie_streams")
+      .delete()
+      .eq("movie_id",title);
+
     if(error)throw error;
-    await loadAdminLinks();toast("Ссылка удалена");
-  }catch(error){toast("Ошибка удаления: "+error.message)}
+
+    await loadAdminLinks();
+    toast("Ссылка удалена");
+  }catch(error){
+    toast("Ошибка удаления: "+error.message);
+  }
 }
 
 function renderAdminList(){
   const root=document.getElementById("adminList");
   if(!root)return;
+
   const rows=Object.values(streamLinks);
+
   if(!rows.length){
-    root.innerHTML='<p class="small">Пока нет добавленных ссылок.</p>';return;
+    root.innerHTML='<p class="small">Пока нет добавленных ссылок.</p>';
+    return;
   }
-  root.innerHTML=rows.map(row=>`
-    <div class="admin-item">
-      <span>${escapeHTML(row.movie_id)} — ссылка добавлена</span>
-      <button onclick="deleteMovieLink(${JSON.stringify(row.movie_id)})">Удалить</button>
-    </div>`).join("");
+
+  root.replaceChildren();
+
+  rows.forEach(row=>{
+    const item=document.createElement("div");
+    item.className="admin-item";
+
+    const label=document.createElement("span");
+    label.textContent=row.movie_id+" — ссылка добавлена";
+
+    const button=document.createElement("button");
+    button.type="button";
+    button.textContent="Удалить";
+    button.addEventListener("click",()=>deleteMovieLink(row.movie_id));
+
+    item.append(label,button);
+    root.appendChild(item);
+  });
 }
 
 /* КАТАЛОГ */
 function renderFilters(){
-  document.getElementById("filters").innerHTML=genres.map(g=>
+  const root=document.getElementById("filters");
+  if(!root)return;
+
+  root.innerHTML=genres.map(g=>
     <button class="${currentGenre===g?"active":""}" onclick="setGenre(${JSON.stringify(g)})">${escapeHTML(g)}</button>
   ).join("");
 }
-function setGenre(g){currentGenre=g;currentMode="all";renderMovies()}
-function showAll(){currentMode="all";currentGenre="Все";renderMovies()}
-function showFavorites(){currentMode="favorites";currentGenre="Все";renderMovies()}
-function showLater(){currentMode="later";currentGenre="Все";renderMovies()}
+
+function setGenre(g){
+  currentGenre=g;
+  currentMode="all";
+  renderMovies();
+}
+
+function showAll(){
+  currentMode="all";
+  currentGenre="Все";
+  renderMovies();
+}
+
+function showFavorites(){
+  currentMode="favorites";
+  currentGenre="Все";
+  renderMovies();
+}
+
+function showLater(){
+  currentMode="later";
+  currentGenre="Все";
+  renderMovies();
+}
 
 function renderMovies(){
   renderFilters();
+
   let list=films.map((f,i)=>({f,i}));
   const search=document.getElementById("search").value.trim().toLowerCase();
-  if(currentMode==="favorites")list=list.filter(x=>favorites.includes(x.i));
-  if(currentMode==="later")list=list.filter(x=>later.includes(x.i));
-  if(currentGenre!=="Все")list=list.filter(x=>x.f[3]===currentGenre);
-  if(search)list=list.filter(x=>x.f.join(" ").toLowerCase().includes(search));
+
+  if(currentMode==="favorites"){
+    list=list.filter(x=>favorites.includes(x.i));
+  }
+
+  if(currentMode==="later"){
+    list=list.filter(x=>later.includes(x.i));
+  }
+
+  if(currentGenre!=="Все"){
+    list=list.filter(x=>x.f[3]===currentGenre);
+  }
+
+  if(search){
+    list=list.filter(x=>x.f.join(" ").toLowerCase().includes(search));
+  }
+
   const sort=document.getElementById("sort").value;
+
   if(sort==="rating")list.sort((a,b)=>b.f[4]-a.f[4]);
   if(sort==="year")list.sort((a,b)=>b.f[2]-a.f[2]);
   if(sort==="old")list.sort((a,b)=>a.f[2]-b.f[2]);
@@ -501,12 +691,13 @@ function renderMovies(){
     currentMode==="favorites"?"Избранное":
     currentMode==="later"?"Посмотреть позже":
     currentGenre==="Все"?"Популярные фильмы":currentGenre;
+
   document.getElementById("count").textContent="Фильмов: "+list.length;
 
   const root=document.getElementById("movies");
+
   if(!list.length){
-    root.
-      innerHTML='<div class="empty">Здесь пока пусто. Выбери фильм и добавь его в свою коллекцию.</div>';
+    root.innerHTML='<div class="empty">Здесь пока пусто. Выбери фильм и добавь его в свою коллекцию.</div>';
     return;
   }
 
@@ -523,7 +714,8 @@ function renderMovies(){
           <button onclick="toggleLater(${i})">＋</button>
         </div>
       </div>
-    </article>`).join("");
+    </article>
+  `).join("");
 
   list.forEach(({i})=>loadPoster(i));
 }
@@ -532,43 +724,77 @@ function renderMovies(){
 function putPoster(i,url){
   const holder=document.getElementById("poster-"+i);
   if(!holder)return;
+
+  const safeUrl=safeHttpsUrl(url);
+  if(!safeUrl)return;
+
   const img=document.createElement("img");
-  img.alt=films[i][0];img.loading="lazy";img.src=url;
-  img.onerror=()=>{img.remove();holder.textContent=films[i][0]};
+  img.alt=films[i][0];
+  img.loading="lazy";
+  img.src=safeUrl.href;
+
+  img.onerror=()=>{
+    img.remove();
+    holder.textContent=films[i][0];
+  };
+
   holder.replaceChildren(img);
 }
 
 async function loadPoster(i){
   const holder=document.getElementById("poster-"+i);
   if(!holder||posterLoading.has(i))return;
-  if(posterCache[i]){putPoster(i,posterCache[i]);return}
+
+  if(posterCache[i]){
+    putPoster(i,posterCache[i]);
+    return;
+  }
+
   posterLoading.add(i);
+
   try{
     const query=encodeURIComponent(films[i][1]+" film");
     const url="https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch="+query+"&gsrlimit=5&prop=pageimages&piprop=thumbnail&pithumbsize=600&format=json&origin=*";
+
     const response=await fetch(url);
     if(!response.ok)throw new Error("Image request failed");
+
     const data=await response.json();
     const pages=Object.values(data.query?.pages||{});
     const found=pages.find(p=>p.thumbnail?.source);
+
     if(found){
-      posterCache[i]=found.thumbnail.source;
-      save("kmf_posters",posterCache);
-      putPoster(i,posterCache[i]);
+      const imageUrl=safeHttpsUrl(found.thumbnail.source);
+
+      if(imageUrl){
+        posterCache[i]=imageUrl.href;
+        save("kmf_posters",posterCache);
+        putPoster(i,imageUrl.href);
+      }
     }
-  }catch(error){console.log("Постер недоступен:",films[i][0])}
-  finally{posterLoading.delete(i)}
+  }catch(error){
+    console.log("Постер недоступен:",films[i][0]);
+  }finally{
+    posterLoading.delete(i);
+  }
 }
 
 /* ИЗБРАННОЕ И СПИСОК */
 function toggleFavorite(i){
-  favorites=favorites.includes(i)?favorites.filter(x=>x!==i):[...favorites,i];
+  favorites=favorites.includes(i)
+    ?favorites.filter(x=>x!==i)
+    :[...favorites,i];
+
   save("kmf_favorites",favorites);
   toast(favorites.includes(i)?"Добавлено в избранное":"Удалено из избранного");
   renderMovies();
 }
+
 function toggleLater(i){
-  later=later.includes(i)?later.filter(x=>x!==i):[...later,i];
+  later=later.includes(i)
+    ?later.filter(x=>x!==i)
+    :[...later,i];
+
   save("kmf_later",later);
   toast(later.includes(i)?"Добавлено в список":"Удалено из списка");
   renderMovies();
@@ -576,8 +802,13 @@ function toggleLater(i){
 
 /* КАРТОЧКА И ПРОИГРЫВАТЕЛЬ */
 function openMovie(i){
-  const f=films[i],poster=posterCache[i],link=streamLinks[f[0]];
+  const f=films[i];
+  if(!f)return;
+
+  const poster=posterCache[i];
+  const link=streamLinks[f[0]];
   const hasVideo=!!link?.video_url;
+
   document.getElementById("modalContent").innerHTML=`
     <button class="close" onclick="closeModal()">✕</button>
     ${poster?`<img class="modal-poster" src="${escapeHTML(poster)}" alt="">`:""}
@@ -590,21 +821,39 @@ function openMovie(i){
       <button onclick="toggleLater(${i});openMovie(${i})">${later.includes(i)?"Убрать из списка":"＋ Посмотреть позже"}</button>
       <button onclick="trailer(${i})">▶️ Найти трейлер</button>
     </div>
-    <div id="playerArea"></div>`;
+    <div id="playerArea"></div>
+  `;
+
   document.getElementById("modal").classList.add("show");
 }
 
 function playMovie(i){
   const link=streamLinks[films[i][0]];
-  if(!link?.video_url){toast("Для этого фильма пока нет ссылки");return}
+
+  if(!link?.video_url){
+    toast("Для этого фильма пока нет ссылки");
+    return;
+  }
+
   const source=videoSource(link.video_url);
-  if(!source){toast("Ссылка не поддерживается");return}
+
+  if(!source){
+    toast("Ссылка не поддерживается");
+    return;
+  }
+
   const player=source.type==="iframe"
     ?`<iframe src="${escapeHTML(source.url)}" title="${escapeHTML(films[i][0])}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>`
     :`<video controls playsinline preload="metadata" src="${escapeHTML(source.url)}"></video>`;
+
   const box=document.getElementById("playerArea");
   if(!box)return;
-  box.innerHTML=`<div class="player-label">▶️ ${escapeHTML(films[i][0])}</div><div class="player-wrap">${player}</div>`;
+
+  box.innerHTML=`
+    <div class="player-label">▶️ ${escapeHTML(films[i][0])}</div>
+    <div class="player-wrap">${player}</div>
+  `;
+
   box.scrollIntoView({behavior:"smooth",block:"center"});
 }
 
@@ -615,16 +864,29 @@ function closeModal(){
 
 function trailer(i){
   const saved=streamLinks[films[i][0]]?.trailer_url;
-  if(saved&&safeHttpsUrl(saved)){window.open(saved,"_blank","noopener,noreferrer");return}
+
+  if(saved&&safeHttpsUrl(saved)){
+    window.open(saved,"_blank","noopener,noreferrer");
+    return;
+  }
+
   const q=encodeURIComponent(films[i][0]+" trailer");
   window.open("https://www.youtube.com/results?search_query="+q,"_blank","noopener,noreferrer");
 }
 
-function randomMovie(){openMovie(Math.floor(Math.random()*films.length))}
-function movieOfDay(){const day=Math.floor(Date.now()/86400000);openMovie(day%films.length)}
+function randomMovie(){
+  openMovie(Math.floor(Math.random()*films.length));
+}
+
+function movieOfDay(){
+  const day=Math.floor(Date.now()/86400000);
+  openMovie(day%films.length);
+}
+
 function profile(){
   const name=prompt("Как тебя называть?",profileName);
   if(name===null)return;
+
   profileName=name.trim()||"Гость";
   save("kmf_name",profileName);
   toast("Привет, "+profileName+"!");
@@ -639,17 +901,26 @@ function startCatalog(){
 async function startSupabase(){
   if(!db){
     console.warn("Supabase не загрузился. Каталог работает автономно.");
+    updateAuthUI();
     return;
   }
+
   try{
     const {data,error}=await db.auth.getSession();
     if(error)throw error;
+
     currentUser=data.session?.user||null;
+
     await checkAdmin();
     await loadPublicLinks();
+
     db.auth.onAuthStateChange((_event,session)=>{
       currentUser=session?.user||null;
-      setTimeout(()=>checkAdmin(),0);
+
+      setTimeout(async()=>{
+        await checkAdmin();
+        if(!isAdmin)await loadPublicLinks();
+      },0);
     });
   }catch(error){
     console.error("Supabase:",error);
