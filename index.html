@@ -1,230 +1,348 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#090914">
 <title>KinoMezafilms — мир кино</title>
 <style>
-:root{color-scheme:dark;--bg:#090914;--panel:#17172b;--panel2:#22223b;--text:#f5f3ff;--muted:#aaa5c0;--accent:#a855f7;--pink:#ec4899}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#292044 0,#090914 48%);color:var(--text);font:16px Arial,sans-serif;min-height:100vh}
-button,input,select{font:inherit}button{cursor:pointer}
-header{position:sticky;top:0;z-index:5;background:#090914ed;backdrop-filter:blur(12px);border-bottom:1px solid #ffffff18}
-.head,main,footer{max-width:1200px;margin:auto;padding:15px 18px}
-.head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
-.logo{font-size:24px;font-weight:900;background:linear-gradient(90deg,#c084fc,#f472b6);color:transparent;background-clip:text}
-nav{display:flex;gap:8px;flex-wrap:wrap}
-.btn,.filter{border:1px solid #ffffff20;background:var(--panel2);color:white;border-radius:11px;padding:10px 13px}
-.btn:hover,.filter:hover{border-color:var(--accent)}.primary{background:linear-gradient(100deg,#9333ea,#db2777);border:0}
-.hero{padding:32px;border:1px solid #ffffff20;border-radius:22px;background:linear-gradient(110deg,#26183e,#401c4a);margin:12px 0 28px}
-.hero h1{font-size:clamp(30px,6vw,52px);margin:0 0 10px}.hero p{color:#e1d5f3;line-height:1.5;max-width:650px}
-.controls{display:grid;grid-template-columns:1fr 190px;gap:10px;margin:16px 0}
-.field{width:100%;padding:12px 13px;border-radius:11px;background:var(--panel);border:1px solid #ffffff25;color:white}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 20px}.filter{border-radius:30px;padding:8px 12px}.filter.active{background:#6b21a8;border-color:#c084fc}
+:root{--bg:#090914;--panel:#171729;--panel2:#24243c;--text:#f5f5ff;--muted:#aaaac0;--accent:#a855f7}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{position:sticky;top:0;z-index:10;background:#090914ed;border-bottom:1px solid #ffffff18;padding:15px}
+.header{max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-size:24px;font-weight:bold;color:#c084fc}
+button,input,select{font:inherit}
+button{cursor:pointer;border:1px solid #ffffff20;border-radius:10px;padding:10px 14px;background:var(--panel2);color:white}
+button:hover{border-color:#c084fc}
+.primary{background:linear-gradient(100deg,#9333ea,#db2777);border:0}
+main{max-width:1200px;margin:auto;padding:20px 14px}
+.hero{padding:35px 25px;border-radius:20px;background:linear-gradient(120deg,#281342,#48204f);margin-bottom:28px}
+.hero h1{font-size:clamp(30px,6vw,48px);margin:0 0 12px}
+.hero p{color:#e0d2f3;line-height:1.5}
+.controls{display:grid;grid-template-columns:1fr 190px;gap:10px;margin:20px 0}
+input,select{background:var(--panel);border:1px solid #ffffff20;color:white;padding:13px;border-radius:10px;width:100%}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filter.active{background:#7627a8;border-color:#c084fc}
 .catalog{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
-.movie{overflow:hidden;background:var(--panel);border:1px solid #ffffff18;border-radius:15px;cursor:pointer;min-width:0}
-.movie:hover{transform:translateY(-3px);border-color:var(--accent)}
-.poster{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:linear-gradient(140deg,#34204d,#121222)}
-.poster-fallback{aspect-ratio:2/3;display:grid;place-items:center;text-align:center;padding:14px;background:linear-gradient(140deg,#34204d,#121222);color:#e9d5ff;font-weight:bold}
-.info{padding:10px}.name{font-weight:bold;line-height:1.35}.meta{font-size:12px;color:var(--muted);margin-top:6px}
-.actions{display:flex;gap:6px;margin-top:10px}.mini{flex:1;padding:7px 4px;border:1px solid #ffffff20;background:#29213d;color:white;border-radius:8px}
-.empty{grid-column:1/-1;text-align:center;padding:35px;background:var(--panel);border-radius:14px;color:var(--muted)}
-.modal{display:none;position:fixed;inset:0;z-index:10;background:#000c;align-items:center;justify-content:center;padding:15px}.modal.open{display:flex}
-.dialog{position:relative;width:min(620px,100%);max-height:90vh;overflow:auto;background:#19172a;border:1px solid #ffffff25;border-radius:18px;padding:22px}
-.close{position:absolute;right:12px;top:10px;border:0;border-radius:50%;background:#302a43;color:white;width:34px;height:34px;font-size:20px}
-.detail{display:grid;grid-template-columns:150px 1fr;gap:16px}.detail .poster-fallback{border-radius:10px}
-.video{width:100%;aspect-ratio:16/9;border:0;border-radius:10px;background:#000;margin-top:12px}
-.admin{display:none;margin:28px 0;padding:20px;background:#19172a;border:1px solid #7542a4;border-radius:16px}.admin.open{display:block}
-.admin>*{margin:7px 0}.muted{color:var(--muted)}footer{text-align:center;color:var(--muted);border-top:1px solid #ffffff18;margin-top:35px}
-@media(max-width:950px){.catalog{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:650px){.catalog{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.controls{grid-template-columns:1fr}.head{align-items:flex-start;flex-direction:column}nav{width:100%}nav .btn{flex:1;padding:9px 6px;font-size:12px}.hero{padding:23px}.detail{grid-template-columns:105px 1fr}}
+.movie{background:var(--panel);border:1px solid #ffffff15;border-radius:14px;overflow:hidden;cursor:pointer;min-width:0}
+.movie:hover{transform:translateY(-3px);border-color:#a855f7}
+.poster{width:100%;aspect-ratio:2/3;position:relative;background:linear-gradient(145deg,#38204e,#151525);overflow:hidden}
+.poster img{width:100%;height:100%;object-fit:cover;display:none}
+.poster img.loaded{display:block}
+.poster-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;color:#e9caff;font-size:18px;font-weight:bold}
+.info{padding:11px}
+.title{font-weight:bold;line-height:1.35}
+.meta{color:var(--muted);font-size:12px;margin-top:7px}
+.actions{display:flex;gap:6px;margin-top:10px}
+.actions button{flex:1;padding:8px 4px;font-size:12px}
+.empty{grid-column:1/-1;text-align:center;padding:35px;background:var(--panel);border-radius:12px;color:var(--muted)}
+.section{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.modal{display:none;position:fixed;inset:0;background:#000d;z-index:30;align-items:center;justify-content:center;padding:15px}
+.modal.show{display:flex}
+.modal-box{background:var(--panel);border:1px solid #ffffff25;border-radius:18px;padding:20px;width:min(650px,100%);max-height:90vh;overflow:auto;position:relative}
+.close{position:absolute;right:12px;top:12px}
+.detail{display:grid;grid-template-columns:150px 1fr;gap:16px;margin-top:20px}
+.detail img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:10px}
+.muted{color:var(--muted);line-height:1.5}
+footer{text-align:center;padding:25px;color:var(--muted)}
+@media(max-width:900px){.catalog{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:600px){.catalog{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.controls{grid-template-columns:1fr}.header{justify-content:center}.detail{grid-template-columns:105px 1fr}.hero{padding:25px 18px}}
 </style>
 </head>
 <body>
-<header><div class="head">
+
+<header>
+<div class="header">
 <div class="logo">KinoMezafilms</div>
-<nav>
-<button class="btn" type="button" onclick="showCatalog()">Каталог</button>
-<button class="btn" type="button" onclick="showFavorites()">Избранное</button>
-<button class="btn" type="button" onclick="showLater()">Посмотреть позже</button>
-<button class="btn" type="button" onclick="openLogin()">Админ</button>
-</nav></div></header>
+<div>
+<button onclick="showCatalog()">Каталог</button>
+<button onclick="showFavorites()">♥ Избранное</button>
+<button onclick="showLater()">Посмотреть позже</button>
+</div>
+</div>
+</header>
+
 <main>
 <section class="hero">
 <h1>Твой мир кино</h1>
 <p>Выбирай фильмы, открывай новые истории и собирай собственную коллекцию.</p>
-<button class="btn primary" type="button" onclick="showCatalog()">Открыть каталог</button>
-<button class="btn" type="button" onclick="randomMovie()">Случайный фильм</button>
+<button class="primary" onclick="showCatalog()">Открыть каталог</button>
+<button onclick="randomMovie()">Случайный фильм</button>
 </section>
-<h2 id="heading">Каталог фильмов <small id="count" class="muted"></small></h2>
-<div class="controls">
-<input id="search" class="field" placeholder="Поиск фильма..." oninput="render()">
-<select id="sort" class="field" onchange="render()"><option value="rating">Сначала популярные</option><option value="new">Сначала новые</option><option value="old">Сначала старые</option><option value="name">По названию</option></select>
+
+<div class="section">
+<h2 id="heading">Каталог фильмов</h2>
+<span id="count" class="muted"></span>
 </div>
-<div id="filters" class="filters"></div>
-<div id="catalog" class="catalog"></div>
-<section id="admin" class="admin">
-<h2>Панель администратора</h2>
-<button class="btn" type="button" onclick="logout()">Выйти</button>
-<p class="muted">Добавление ссылок на видео к выбранному фильму.</p>
-<select id="adminMovie" class="field"></select>
-<input id="videoUrl" class="field" placeholder="Ссылка на видео (YouTube, Vimeo или MP4)">
-<input id="trailerUrl" class="field" placeholder="Ссылка на трейлер (необязательно)">
-<button class="btn primary" type="button" onclick="saveLinks()">Сохранить ссылки</button>
-<p id="adminMsg" class="muted">Админ-панель.</p>
-</section>
+
+<div class="controls">
+<input id="search" placeholder="Найти фильм..." oninput="render()">
+<select id="sort" onchange="render()">
+<option value="rating">Сначала популярные</option>
+<option value="new">Сначала новые</option>
+<option value="old">Сначала старые</option>
+<option value="name">По названию</option>
+</select>
+</div>
+
+<div class="filters" id="filters"></div>
+<div class="catalog" id="catalog"></div>
 </main>
+
 <footer>KinoMezafilms © 2026</footer>
 
-<div id="loginModal" class="modal" onclick="outside(event,'loginModal')"><div class="dialog">
-<button class="close" type="button" onclick="closeModal('loginModal')">×</button>
-<h2>Вход администратора</h2>
-<input id="email" class="field" type="email" placeholder="Email">
-<input id="password" class="field" type="password" placeholder="Пароль">
-<button class="btn primary" type="button" onclick="login()">Войти</button>
-<p id="loginMsg" class="muted">Вход через Supabase.</p>
-</div></div>
-<div id="movieModal" class="modal" onclick="outside(event,'movieModal')"><div class="dialog">
-<button class="close" type="button" onclick="closeModal('movieModal')">×</button><div id="details"></div>
-</div></div>
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+<div class="modal-box">
+<button class="close" onclick="closeModal()">✕</button>
+<div id="details"></div>
+</div>
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 "use strict";
-const SUPABASE_URL="https://randamxoghulcnjncybw.supabase.co";
-const SUPABASE_KEY="sb_publishable_WNSviuHLFahwoS5_hB53Cw_2MQpECdi";
+
 const movies=[
-{id:"inception",title:"Начало",year:2010,genre:"Фантастика",rating:8.8,desc:"Вор проникает в сны людей и получает задание внедрить идею.",wiki:"Inception"},
-{id:"interstellar",title:"Интерстеллар",year:2014,genre:"Фантастика",rating:8.7,desc:"Исследователи ищут новый дом для человечества.",wiki:"Interstellar (film)"},
-{id:"matrix",title:"Матрица",year:1999,genre:"Фантастика",rating:8.7,desc:"Хакер узнаёт, что привычный мир может быть искусственной реальностью.",wiki:"The Matrix"},
-{id:"avatar",title:"Аватар",year:2009,genre:"Фантастика",rating:7.9,desc:"Бывший морпех оказывается между двумя мирами.",wiki:"Avatar (2009 film)"},
-{id:"dune",title:"Дюна",year:2021,genre:"Фантастика",rating:8,desc:"Наследник отправляется на опасную пустынную планету.",wiki:"Dune (2021 film)"},
-{id:"gladiator",title:"Гладиатор",year:2000,genre:"Боевик",rating:8.5,desc:"Римский полководец становится гладиатором.",wiki:"Gladiator (2000 film)"},
-{id:"darkknight",title:"Тёмный рыцарь",year:2008,genre:"Боевик",rating:9,desc:"Бэтмен сталкивается с Джокером.",wiki:"The Dark Knight"},
-{id:"johnwick",title:"Джон Уик",year:2014,genre:"Боевик",rating:7.4,desc:"Бывший наёмник возвращается в мир прошлого.",wiki:"John Wick (film)"},
-{id:"madmax",title:"Безумный Макс: Дорога ярости",year:2015,genre:"Боевик",rating:8.1,desc:"Безумная гонка за свободой в мире пустошей.",wiki:"Mad Max: Fury Road"},
-{id:"titanic",title:"Титаник",year:1997,genre:"Драма",rating:7.9,desc:"История любви на борту океанского лайнера.",wiki:"Titanic (1997 film)"},
-{id:"shawshank",title:"Побег из Шоушенка",year:1994,genre:"Драма",rating:9.3,desc:"Банкир в тюрьме не теряет надежды на свободу.",wiki:"The Shawshank Redemption"},
-{id:"greenmile",title:"Зелёная миля",year:1999,genre:"Драма",rating:8.6,desc:"Надзиратель встречает необычного заключённого.",wiki:"The Green Mile (film)"},
-{id:"forrest",title:"Форрест Гамп",year:1994,genre:"Драма",rating:8.8,desc:"Необычная жизнь человека, ставшего свидетелем истории.",wiki:"Forrest Gump"},
-{id:"joker",title:"Джокер",year:2019,genre:"Драма",rating:8.4,desc:"История человека, постепенно теряющего связь с реальностью.",wiki:"Joker (2019 film)"},
-{id:"hangover",title:"Мальчишник в Вегасе",year:2009,genre:"Комедия",rating:7.7,desc:"Друзья пытаются вспомнить безумную ночь.",wiki:"The Hangover"},
-{id:"mask",title:"Маска",year:1994,genre:"Комедия",rating:7,desc:"Обычный служащий находит волшебную маску.",wiki:"The Mask (1994 film)"},
-{id:"homealone",title:"Один дома",year:1990,genre:"Комедия",rating:7.7,desc:"Мальчик защищает дом от грабителей.",wiki:"Home Alone"},
-{id:"freeguy",title:"Главный герой",year:2021,genre:"Комедия",rating:7.1,desc:"Банковский служащий узнаёт, что живёт внутри игры.",wiki:"Free Guy"},
-{id:"conjuring",title:"Заклятие",year:2013,genre:"Ужасы",rating:7.5,desc:"Семья сталкивается с потусторонними силами.",wiki:"The Conjuring"},
-{id:"it",title:"Оно",year:2017,genre:"Ужасы",rating:7.3,desc:"Дети сталкиваются с древним злом.",wiki:"It (2017 film)"},
-{id:"quiet",title:"Тихое место",year:2018,genre:"Ужасы",rating:7.5,desc:"Семья выживает в мире, где опасно издавать звуки.",wiki:"A Quiet Place"},
-{id:"lotr",title:"Властелин колец: Братство кольца",year:2001,genre:"Фэнтези",rating:8.8,desc:"Хоббит отправляется уничтожить кольцо.",wiki:"The Lord of the Rings: The Fellowship of the Ring"},
-{id:"harry",title:"Гарри Поттер и философский камень",year:2001,genre:"Фэнтези",rating:7.6,desc:"Мальчик поступает в школу волшебства.",wiki:"Harry Potter and the Philosopher's Stone (film)"},
-{id:"pirates",title:"Пираты Карибского моря",year:2003,genre:"Приключения",rating:8.1,desc:"Капитан Джек Воробей отправляется за приключениями.",wiki:"Pirates of the Caribbean: The Curse of the Black Pearl"},
-{id:"jumanji",title:"Джуманджи",year:1995,genre:"Приключения",rating:7.1,desc:"Игра превращает жизнь в опасное приключение.",wiki:"Jumanji (1995 film)"},
-{id:"uncharted",title:"Анчартед",year:2022,genre:"Приключения",rating:6.3,desc:"Охотники за сокровищами ищут затерянное золото.",wiki:"Uncharted (film)"},
-{id:"spiderman",title:"Человек-паук: Нет пути домой",year:2021,genre:"Фантастика",rating:8.2,desc:"Питер Паркер сталкивается с последствиями раскрытия личности.",wiki:"Spider-Man: No Way Home"},
-{id:"avengers",title:"Мстители: Финал",year:2019,genre:"Фантастика",rating:8.4,desc:"Герои пытаются вернуть исчезнувших.",wiki:"Avengers: Endgame"},
-{id:"ironman",title:"Железный человек",year:2008,genre:"Боевик",rating:7.9,desc:"Изобретатель создаёт высокотехнологичный костюм.",wiki:"Iron Man (2008 film)"},
-{id:"deadpool",title:"Дэдпул",year:2016,genre:"Комедия",rating:8,desc:"Необычный антигерой ищет виновника своих бед.",wiki:"Deadpool (film)"},
-{id:"logan",title:"Логан",year:2017,genre:"Боевик",rating:8.1,desc:"Постаревший герой защищает девочку.",wiki:"Logan (film)"},
-{id:"whiplash",title:"Одержимость",year:2014,genre:"Драма",rating:8.5,desc:"Барабанщик сталкивается с жестоким преподавателем.",wiki:"Whiplash (2014 film)"},
-{id:"prestige",title:"Престиж",year:2006,genre:"Триллер",rating:8.5,desc:"Два иллюзиониста превращают соперничество в опасную игру.",wiki:"The Prestige (film)"},
-{id:"shutter",title:"Остров проклятых",year:2010,genre:"Триллер",rating:8.2,desc:"Детектив расследует исчезновение пациентки.",wiki:"Shutter Island"},
-{id:"se7en",title:"Семь",year:1995,genre:"Триллер",rating:8.6,desc:"Детективы расследуют серию преступлений.",wiki:"Seven (1995 film)"},
-{id:"knives",title:"Достать ножи",year:2019,genre:"Детектив",rating:7.9,desc:"Детектив расследует загадочную смерть.",wiki:"Knives Out"},
-{id:"sherlock",title:"Шерлок Холмс",year:2009,genre:"Детектив",rating:7.6,desc:"Сыщик расследует опасный заговор.",wiki:"Sherlock Holmes (2009 film)"},
-{id:"ratatouille",title:"Рататуй",year:2007,genre:"Мультфильм",rating:8.1,desc:"Крыса мечтает стать поваром в Париже.",wiki:"Ratatouille (film)"},
-{id:"coco",title:"Тайна Коко",year:2017,genre:"Мультфильм",rating:8.4,desc:"Мальчик отправляется в мир мёртвых.",wiki:"Coco (2017 film)"},
-{id:"up",title:"Вверх",year:2009,genre:"Мультфильм",rating:8.3,desc:"Пожилой мужчина отправляется в путешествие.",wiki:"Up (2009 film)"},
-{id:"walle",title:"ВАЛЛ-И",year:2008,genre:"Мультфильм",rating:8.4,desc:"Робот находит то, что может изменить будущее.",wiki:"WALL-E"},
-{id:"soul",title:"Душа",year:2020,genre:"Мультфильм",rating:8,desc:"Музыкант пытается понять смысл жизни.",wiki:"Soul (2020 film)"},
-{id:"topgun",title:"Топ Ган: Мэверик",year:2022,genre:"Боевик",rating:8.2,desc:"Лётчик готовит новое поколение пилотов.",wiki:"Top Gun: Maverick"},
-{id:"oppenheimer",title:"Оппенгеймер",year:2023,genre:"Драма",rating:8.3,desc:"История учёного, участвовавшего в создании атомной бомбы.",wiki:"Oppenheimer (film)"},
-{id:"barbie",title:"Барби",year:2023,genre:"Комедия",rating:6.8,desc:"Путешествие из кукольного мира в реальность.",wiki:"Barbie (film)"},
-{id:"godfather",title:"Крёстный отец",year:1972,genre:"Драма",rating:9.2,desc:"Сага о семье Корлеоне.",wiki:"The Godfather"},
-{id:"terminator",title:"Терминатор 2",year:1991,genre:"Фантастика",rating:8.6,desc:"Киборг защищает мальчика от нового терминатора.",wiki:"Terminator 2: Judgment Day"},
-{id:"backfuture",title:"Назад в будущее",year:1985,genre:"Фантастика",rating:8.5,desc:"Подросток случайно отправляется в прошлое.",wiki:"Back to the Future"}
-];
-let genre="Все",mode="all",db=null,isAdmin=false,user=null,links={};
-const genres=["Все",...new Set(movies.map(m=>m.genre))];
-function getSet(key){try{return new Set(JSON.parse(localStorage.getItem(key)||"[]"))}catch(e){return new Set()}}
-const fav=getSet("km_fav"),later=getSet("km_later");
-function persist(){localStorage.setItem("km_fav",JSON.stringify([...fav]));localStorage.setItem("km_later",JSON.stringify([...later]))}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function movie(id){return movies.find(m=>m.id===id)}
-function renderFilters(){document.getElementById("filters").innerHTML=genres.map(g=>`<button type="button" class="filter ${genre===g?"active":""}" onclick="setGenre(${JSON.stringify(g)})">${esc(g)}</button>`).join("")}
-function setGenre(g){genre=g;mode="all";renderFilters();render()}
-function showCatalog(){mode="all";genre="Все";document.getElementById("heading").textContent="Каталог фильмов";renderFilters();render()}
-function showFavorites(){mode="fav";document.getElementById("heading").textContent="Избранное";render()}
-function showLater(){mode="later";document.getElementById("heading").textContent="Посмотреть позже";render()}
-function toggle(id,type){const s=type==="fav"?fav:later;s.has(id)?s.delete(id):s.add(id);persist();render();if(document.getElementById("movieModal").classList.contains("open"))openMovie(id)}
+["inception","Начало",2010,"Фантастика",8.8,"Вор проникает в сны людей и получает необычное задание.","Inception"],
+["interstellar","Интерстеллар",2014,"Фантастика",8.7,"Исследователи отправляются через червоточину на поиски нового дома.","Interstellar (film)"],
+["matrix","Матрица",1999,"Фантастика",8.7,"Хакер узнаёт, что привычный мир может быть искусственной реальностью.","The Matrix"],
+["avatar","Аватар",2009,"Фантастика",7.9,"На далёкой планете бывший морпех оказывается между двумя мирами.","Avatar (2009 film)"],
+["dune","Дюна",2021,"Фантастика",8.0,"История борьбы за власть и выживание на пустынной планете.","Dune (2021 film)"],
+["gladiator","Гладиатор",2000,"Боевик",8.5,"Римский полководец становится гладиатором.","Gladiator (2000 film)"],
+["darkknight","Тёмный рыцарь",2008,"Боевик",9.0,"Бэтмен сталкивается с опасным преступником.","The Dark Knight"],
+["johnwick","Джон Уик",2014,"Боевик",7.4,"Бывший наёмник возвращается в мир опасных приключений.","John Wick (film)"],
+["madmax","Безумный Макс",2015,"Боевик",8.1,"В пустошах начинается гонка за свободой.","Mad Max: Fury Road"],
+["titanic","Титаник",1997,"Драма",7.9,"История любви на борту знаменитого лайнера.","Titanic (1997 film)"],
+["shawshank","Побег из Шоушенка",1994,"Драма",9.3,"Банкир оказывается в тюрьме и не теряет надежды.","The Shawshank Redemption"],
+["greenmile","Зелёная миля",1999,"Драма",8.6,"Надзиратель встречает необычного заключённого.","The Green Mile (film)"],
+["forrest","Форрест Гамп",1994,"Драма",8.8,"Необычная жизнь человека, ставшего свидетелем истории.","Forrest Gump"],
+["joker","Джокер",2019,"Драма",8.4,"История человека, постепенно теряющего связь с реальностью.","Joker (2019 film)"],
+["hangover","Мальчишник в Вегасе",2009,"Комедия",7.7,"Друзья пытаются вспомнить безумную ночь.","The Hangover"],
+["mask","Маска",1994,"Комедия",7.0,"Обычный человек находит волшебную маску.","The Mask (1994 film)"],
+["homealone","Один дома",1990,"Комедия",7.7,"Мальчик остаётся один дома и защищает его от грабителей.","Home Alone"],
+["freeguy","Главный герой",2021,"Комедия",7.1,"Банковский служащий узнаёт, что живёт в компьютерной игре.","Free Guy"],
+["conjuring","Заклятие",2013,"Ужасы",7.5,"Семья сталкивается с потусторонними силами.","The Conjuring"],
+["it","Оно",2017,"Ужасы",7.3,"Группа детей сталкивается с древним злом.","It (2017 film)"],
+["quiet","Тихое место",2018,"Ужасы",7.5,"Семья выживает в мире, где опасно издавать звуки.","A Quiet Place"],
+["scream","Крик",1996,"Ужасы",7.4,"Таинственный убийца начинает охоту на жителей города.","Scream (1996 film)"],
+["lotr","Властелин колец",2001,"Фэнтези",8.8,"Хоббит отправляется уничтожить опасное кольцо.","The Lord of the Rings: The Fellowship of the Ring"],
+["harry","Гарри Поттер",2001,"Фэнтези",7.6,"Мальчик узнаёт о своём волшебном происхождении.","Harry Potter and the Philosopher's Stone (film)"],
+["pirates","Пираты Карибского моря",2003,"Приключения",8.1,"Капитан Джек Воробей отправляется навстречу приключениям.","Pirates of the Caribbean: The Curse of the Black Pearl"],
+["jumanji","Джуманджи",1995,"Приключения",7.1,"Настольная игра превращает жизнь в приключение.","Jumanji (1995 film)"],
+["spiderman","Человек-паук: Нет пути домой",2021,"Фантастика",8.2,"Питер Паркер сталкивается с последствиями раскрытия личности.","Spider-Man: No Way Home"],
+["avengers","Мстители: Финал",2019,"Фантастика",8.4,"Герои пытаются вернуть исчезнувших друзей.","Avengers: Endgame"],
+["ironman","Железный человек",2008,"Боевик",7.9,"Изобретатель создаёт высокотехнологичный костюм.","Iron Man (2008 film)"],
+["deadpool","Дэдпул",2016,"Комедия",8.0,"Необычный антигерой отправляется на поиски врага.","Deadpool (film)"],
+["logan","Логан",2017,"Боевик",8.1,"Постаревший герой защищает девочку.","Logan (film)"],
+["whiplash","Одержимость",2014,"Драма",8.5,"Молодой барабанщик сталкивается с жёстким преподавателем.","Whiplash (2014 film)"],
+["prestige","Престиж",2006,"Триллер",8.5,"Два иллюзиониста превращают соперничество в опасную игру.","The Prestige (film)"],
+["shutter","Остров проклятых",2010,"Триллер",8.2,"Детектив расследует исчезновение пациентки.","Shutter Island"],
+["se7en","Семь",1995,"Триллер",8.6,"Детективы расследуют серию загадочных преступлений.","Seven (1995 film)"],
+["knives","Достать ножи",2019,"Детектив",7.9,"Детектив расследует смерть главы известной семьи.","Knives Out"],
+["ratatouille","Рататуй",2007,"Мультфильм",8.1,"Крыса мечтает стать великим поваром.","Ratatouille (film)"],
+["coco","Тайна Коко",2017,"Мультфильм",8.4,"Мальчик отправляется в мир мёртвых.","Coco (2017 film)"],
+["up","Вверх",2009,"Мультфильм",8.3,"Путешествие на доме с воздушными шарами.","Up (2009 film)"],
+["wall-e","ВАЛЛ-И",2008,"Мультфильм",8.4,"Маленький робот меняет будущее Земли.","WALL-E"],
+["soul","Душа",2020,"Мультфильм",8.0,"Музыкант пытается понять смысл жизни.","Soul (2020 film)"],
+["topgun","Топ Ган: Мэверик",2022,"Боевик",8.2,"Лётчик готовит новое поколение пилотов.","Top Gun: Maverick"],
+["oppenheimer","Оппенгеймер",2023,"Драма",8.3,"История учёного, создавшего атомную бомбу.","Oppenheimer (film)"],
+["barbie","Барби",2023,"Комедия",6.8,"Путешествие из кукольного мира в реальность.","Barbie (film)"],
+["godfather","Крёстный отец",1972,"Драма",9.2,"История семьи Корлеоне.","The Godfather"],
+["terminator","Терминатор 2",1991,"Фантастика",8.6,"Киборг должен защитить мальчика из будущего.","Terminator 2: Judgment Day"],
+["backfuture","Назад в будущее",1985,"Фантастика",8.5,"Подросток случайно отправляется в прошлое.","Back to the Future"]
+].map(x=>({id:x[0],title:x[1],year:x[2],genre:x[3],rating:x[4],description:x[5],wiki:x[6]}));
+
+let genre="Все";
+let mode="catalog";
+const favorites=new Set(JSON.parse(localStorage.getItem("km_favorites")||"[]"));
+const later=new Set(JSON.parse(localStorage.getItem("km_later")||"[]"));
+const posterCache=new Map();
+
+function esc(s){
+ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function save(){
+ localStorage.setItem("km_favorites",JSON.stringify([...favorites]));
+ localStorage.setItem("km_later",JSON.stringify([...later]));
+}
+
+function getGenres(){
+ return ["Все",...new Set(movies.map(m=>m.genre))];
+}
+
+function renderFilters(){
+ document.getElementById("filters").innerHTML=getGenres().map(g=>
+ `<button class="filter ${genre===g?"active":""}" onclick="setGenre('${esc(g)}')">${esc(g)}</button>`
+ ).join("");
+}
+
+function setGenre(g){genre=g;mode="catalog";renderFilters();render();}
+
+function showCatalog(){
+ mode="catalog";genre="Все";
+ document.getElementById("heading").textContent="Каталог фильмов";
+ renderFilters();render();
+}
+
+function showFavorites(){
+ mode="favorites";
+ document.getElementById("heading").textContent="Избранное";
+ renderFilters();render();
+}
+
+function showLater(){
+ mode="later";
+ document.getElementById("heading").textContent="Посмотреть позже";
+ renderFilters();render();
+}
+
+function toggleFavorite(id){
+ favorites.has(id)?favorites.delete(id):favorites.add(id);
+ save();render();
+}
+
+function toggleLater(id){
+ later.has(id)?later.delete(id):later.add(id);
+ save();render();
+}
+
+/* ДВА СПОСОБА ПОЛУЧИТЬ ПОСТЕР */
+async function getPoster(movie){
+ if(posterCache.has(movie.id))return posterCache.get(movie.id);
+
+ const title=movie.wiki.replace(/ /g,"_");
+ const requests=[
+  async()=>{
+   const response=await fetch(
+    "https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(title),
+    {headers:{"Accept":"application/json"}}
+   );
+   if(!response.ok)throw new Error("Wikipedia REST");
+   const data=await response.json();
+   return data.thumbnail?.source||data.originalimage?.source||null;
+  },
+  async()=>{
+   const url="https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&piprop=thumbnail&pithumbsize=700&titles="+encodeURIComponent(movie.wiki)+"&origin=*";
+   const response=await fetch(url);
+   if(!response.ok)throw new Error("Wikipedia API");
+   const data=await response.json();
+   return Object.values(data.query.pages)[0]?.thumbnail?.source||null;
+  }
+ ];
+
+ let image=null;
+ for(const request of requests){
+  try{
+   image=await request();
+   if(image)break;
+  }catch(error){
+   console.warn("Источник постера недоступен:",error);
+  }
+ }
+
+ posterCache.set(movie.id,image);
+ return image;
+}
+
+function loadPoster(movie,container){
+ const img=container.querySelector("img");
+ const fallback=container.querySelector(".poster-fallback");
+
+ getPoster(movie).then(url=>{
+  if(!url)return;
+  img.onload=()=>{
+   img.classList.add("loaded");
+   fallback.style.display="none";
+  };
+  img.onerror=()=>{
+   img.classList.remove("loaded");
+   fallback.style.display="flex";
+  };
+  img.src=url;
+ });
+}
+
 function render(){
- const q=document.getElementById("search").value.trim().toLowerCase(),sort=document.getElementById("sort").value;
- let list=movies.filter(m=>(!q||m.title.toLowerCase().includes(q))&&(genre==="Все"||m.genre===genre)&&(mode==="fav"?fav.has(m.id):mode==="later"?later.has(m.id):true));
- list.sort(sort==="new"?(a,b)=>b.year-a.year:sort==="old"?(a,b)=>a.year-b.year:sort==="name"?(a,b)=>a.title.localeCompare(b.title,"ru"):(a,b)=>b.rating-a.rating);
- document.getElementById("count").textContent="("+list.length+")";
- const root=document.getElementById("catalog");
- if(!list.length){root.innerHTML='<div class="empty">Ничего не найдено.</div>';return}
- root.innerHTML=list.map(m=>`<article class="movie" onclick="openMovie('${m.id}')"><div class="poster-fallback">${esc(m.title)}</div><img class="poster" alt="${esc(m.title)}" hidden><div class="info"><div class="name">${esc(m.title)}</div><div class="meta">${m.year} · ${esc(m.genre)} · ★ ${m.rating}</div><div class="actions"><button class="mini" type="button" onclick="event.stopPropagation();toggle('${m.id}','fav')">${fav.has(m.id)?"♥":"♡"}</button><button class="mini" type="button" onclick="event.stopPropagation();toggle('${m.id}','later')">${later.has(m.id)?"✓":"＋"}</button></div></div></article>`).join("");
- root.querySelectorAll(".movie").forEach((card,i)=>loadPoster(list[i],card));
+ const search=document.getElementById("search").value.toLowerCase().trim();
+ const sort=document.getElementById("sort").value;
+
+ let list=movies.filter(m=>
+  (m.title.toLowerCase().includes(search)||String(m.year).includes(search))&&
+  (genre==="Все"||m.genre===genre)&&
+  (mode==="favorites"?favorites.has(m.id):mode==="later"?later.has(m.id):true)
+ );
+
+ if(sort==="new")list.sort((a,b)=>b.year-a.year);
+ if(sort==="old")list.sort((a,b)=>a.year-b.year);
+ if(sort==="name")list.sort((a,b)=>a.title.localeCompare(b.title,"ru"));
+ if(sort==="rating")list.sort((a,b)=>b.rating-a.rating);
+
+ document.getElementById("count").textContent="Фильмов: "+list.length;
+ const catalog=document.getElementById("catalog");
+
+ if(!list.length){
+  catalog.innerHTML='<div class="empty">Фильмы не найдены.</div>';
+  return;
+ }
+
+ catalog.innerHTML=list.map(m=>`
+ <article class="movie" onclick="openMovie('${m.id}')">
+  <div class="poster">
+   <div class="poster-fallback">${esc(m.title)}</div>
+   <img alt="Постер ${esc(m.title)}" loading="lazy">
+  </div>
+  <div class="info">
+   <div class="title">${esc(m.title)}</div>
+   <div class="meta">${m.year} · ${esc(m.genre)} · ★ ${m.rating}</div>
+   <div class="actions">
+    <button onclick="event.stopPropagation();toggleFavorite('${m.id}')">${favorites.has(m.id)?"♥":"♡"}</button>
+    <button onclick="event.stopPropagation();toggleLater('${m.id}')">${later.has(m.id)?"✓":"＋"}</button>
+   </div>
+  </div>
+ </article>`).join("");
+
+ catalog.querySelectorAll(".movie").forEach((card,i)=>{
+  loadPoster(list[i],card.querySelector(".poster"));
+ });
 }
-async function loadPoster(m,card){
- try{const u="https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&piprop=thumbnail&pithumbsize=400&titles="+encodeURIComponent(m.wiki)+"&origin=*";const r=await fetch(u);if(!r.ok)return;const j=await r.json();const p=Object.values(j.query.pages)[0];if(p.thumbnail?.source){const img=card.querySelector("img");img.src=p.thumbnail.source;img.hidden=false;card.querySelector(".poster-fallback").remove()}}catch(e){/* poster unavailable: keep title placeholder */}
+
+function randomMovie(){
+ const movie=movies[Math.floor(Math.random()*movies.length)];
+ openMovie(movie.id);
 }
-function randomMovie(){openMovie(movies[Math.floor(Math.random()*movies.length)].id)}
+
 function openMovie(id){
- const m=movie(id);if(!m)return;const l=links[id]||{};
- document.getElementById("details").innerHTML=`<h2>${esc(m.title)}</h2><div class="detail"><div class="poster-fallback">${esc(m.title)}</div><div><p class="muted">${m.year} · ${esc(m.genre)} · ★ ${m.rating}</p><p>${esc(m.desc)}</p><button class="btn" type="button" onclick="toggle('${id}','fav')">${fav.has(id)?"Убрать из избранного":"В избранное"}</button> <button class="btn" type="button" onclick="toggle('${id}','later')">${later.has(id)?"Убрать из списка":"Посмотреть позже"}</button></div></div><div id="player"></div>${l.trailer_url?`<button class="btn" type="button" onclick="play('${id}','trailer')">Трейлер</button>`:""} ${l.video_url?`<button class="btn primary" type="button" onclick="play('${id}','movie')">Смотреть</button>`:""}${!l.video_url&&!l.trailer_url?'<p class="muted">Видео пока не добавлено.</p>':""}`;
- document.getElementById("movieModal").classList.add("open");
+ const m=movies.find(x=>x.id===id);
+ if(!m)return;
+
+ document.getElementById("details").innerHTML=`
+ <h2>${esc(m.title)}</h2>
+ <div class="detail">
+  <div class="poster" id="detailPoster">
+   <div class="poster-fallback">${esc(m.title)}</div>
+   <img alt="Постер ${esc(m.title)}">
+  </div>
+  <div>
+   <p class="muted">${m.year} · ${esc(m.genre)} · ★ ${m.rating}</p>
+   <p>${esc(m.description)}</p>
+   <button onclick="toggleFavorite('${m.id}');openMovie('${m.id}')">${favorites.has(m.id)?"Убрать из избранного":"В избранное"}</button>
+   <br><br>
+   <button onclick="toggleLater('${m.id}');openMovie('${m.id}')">${later.has(m.id)?"Убрать из списка":"Посмотреть позже"}</button>
+  </div>
+ </div>`;
+
+ document.getElementById("modal").classList.add("show");
+ loadPoster(m,document.getElementById("detailPoster"));
 }
-function safeUrl(s){try{const u=new URL(s);return u.protocol==="https:"?u:null}catch(e){return null}}
-function play(id,type){
- const l=links[id]||{},raw=type==="trailer"?l.trailer_url:l.video_url,u=safeUrl(raw||"");if(!u){alert("Ссылка некорректна.");return}
- const host=u.hostname.replace(/^www\./,"");let src=null;
- if(host==="youtu.be")src="https://www.youtube-nocookie.com/embed/"+u.pathname.slice(1);
- if(host==="youtube.com"||host==="m.youtube.com"){const v=u.searchParams.get("v");if(v)src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(v);else if(u.pathname.startsWith("/embed/"))src=u.href}
- if(host==="vimeo.com"){const v=u.pathname.split("/").filter(Boolean).pop();if(/^\d+$/.test(v||""))src="https://player.vimeo.com/video/"+v}
- const area=document.getElementById("player");
- if(/\.(mp4|webm|ogg)$/i.test(u.pathname))area.innerHTML=`<video class="video" controls playsinline src="${esc(u.href)}"></video>`;
- else if(src)area.innerHTML=`<iframe class="video" src="${esc(src)}" allowfullscreen loading="lazy"></iframe>`;
- else area.innerHTML=`<p><a target="_blank" rel="noopener" href="${esc(u.href)}">Открыть видео в новой вкладке</a></p>`;
+
+function closeModal(){
+ document.getElementById("modal").classList.remove("show");
 }
-function closeModal(id){document.getElementById(id).classList.remove("open")}
-function outside(e,id){if(e.target.id===id)closeModal(id)}
-function openLogin(){document.getElementById("loginModal").classList.add("open")}
-async function initSupabase(){
- if(!window.supabase){document.getElementById("loginMsg").textContent="Не удалось загрузить Supabase SDK.";return}
- try{
-  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-  const {data,error}=await db.from("movie_streams").select("movie_id,video_url,trailer_url");
-  if(!error)(data||[]).forEach(r=>links[r.movie_id]=r);
-  const session=await db.auth.getSession();
-  if(session.data?.session)await checkAdmin();
-  db.auth.onAuthStateChange((_event,s)=>{if(!s){isAdmin=false;user=null;document.getElementById("admin").classList.remove("open")}else setTimeout(checkAdmin,0)});
- }catch(e){console.error(e)}
-}
-async function checkAdmin(){
- try{const res=await db.auth.getUser();user=res.data?.user||null;if(!user)return;const a=await db.rpc("is_site_admin");isAdmin=!a.error&&a.data===true;if(isAdmin){document.getElementById("admin").classList.add("open");document.getElementById("adminMovie").innerHTML=movies.map(m=>`<option value="${m.id}">${esc(m.title)}</option>`).join("")}}catch(e){isAdmin=false;console.error(e)}
-}
-async function login(){
- const msg=document.getElementById("loginMsg");if(!db){msg.textContent="Supabase не загрузился.";return}
- const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value;
- if(!email||!password){msg.textContent="Заполни email и пароль.";return}
- msg.textContent="Выполняется вход...";
- const r=await db.auth.signInWithPassword({email,password});
- if(r.error){msg.textContent="Ошибка входа: "+r.error.message;return}
- await checkAdmin();if(isAdmin){closeModal("loginModal");msg.textContent="Вход выполнен."}else{await db.auth.signOut();msg.textContent="У этого аккаунта нет прав администратора."}
-}
-async function logout(){if(db)await db.auth.signOut();isAdmin=false;user=null;document.getElementById("admin").classList.remove("open")}
-async function saveLinks(){
- const msg=document.getElementById("adminMsg");if(!db||!isAdmin){msg.textContent="Нет прав администратора.";return}
- const id=document.getElementById("adminMovie").value,video=document.getElementById("videoUrl").value.trim(),trailer=document.getElementById("trailerUrl").value.trim();
- if(!video&&!trailer){msg.textContent="Добавь хотя бы одну ссылку.";return}
- if((video&&!safeUrl(video))||(trailer&&!safeUrl(trailer))){msg.textContent="Используй ссылки HTTPS.";return}
- msg.textContent="Сохраняем...";
- const r=await db.from("movie_streams").upsert({movie_id:id,video_url:video||trailer,trailer_url:trailer||null,updated_at:new Date().toISOString(),updated_by:user.id},{onConflict:"movie_id"});
- if(r.error){msg.textContent="Ошибка Supabase: "+r.error.message;return}
- links[id]={video_url:video||trailer,trailer_url:trailer||null};msg.textContent="Ссылки сохранены.";document.getElementById("videoUrl").value="";document.getElementById("trailerUrl").value="";
-}
-renderFilters();render();initSupabase();
+
+renderFilters();
+render();
 </script>
 </body>
 </html>
