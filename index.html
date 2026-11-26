@@ -6,239 +6,50 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#090914">
 <title>KinoMezafilms — мир кино</title>
-
 <style>
-:root{
- --bg:#090914;
- --panel:#171729;
- --panel2:#24243c;
- --text:#f5f5ff;
- --muted:#aaaac0;
- --accent:#a855f7;
-}
+:root{--bg:#090914;--panel:#171729;--panel2:#24243c;--text:#f5f5ff;--muted:#aaaac0;--accent:#a855f7}
 *{box-sizing:border-box}
-body{
- margin:0;
- background:var(--bg);
- color:var(--text);
- font-family:Arial,sans-serif;
-}
-header{
- position:sticky;
- top:0;
- z-index:10;
- background:#090914ed;
- border-bottom:1px solid #ffffff18;
- padding:15px;
-}
-.header{
- max-width:1200px;
- margin:auto;
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:12px;
- flex-wrap:wrap;
-}
-.logo{
- font-size:24px;
- font-weight:bold;
- color:#c084fc;
-}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{position:sticky;top:0;z-index:10;background:#090914ed;border-bottom:1px solid #ffffff18;padding:15px}
+.header{max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-size:24px;font-weight:bold;color:#c084fc}
 button,input,select{font:inherit}
-button{
- cursor:pointer;
- border:1px solid #ffffff20;
- border-radius:10px;
- padding:10px 14px;
- background:var(--panel2);
- color:white;
-}
+button{cursor:pointer;border:1px solid #ffffff20;border-radius:10px;padding:10px 14px;background:var(--panel2);color:white}
 button:hover{border-color:#c084fc}
-.primary{
- background:linear-gradient(100deg,#9333ea,#db2777);
- border:0;
-}
-main{
- max-width:1200px;
- margin:auto;
- padding:20px 14px;
-}
-.hero{
- padding:35px 25px;
- border-radius:20px;
- background:linear-gradient(120deg,#281342,#48204f);
- margin-bottom:28px;
-}
-.hero h1{
- font-size:clamp(30px,6vw,48px);
- margin:0 0 12px;
-}
-.hero p{
- color:#e0d2f3;
- line-height:1.5;
-}
-.controls{
- display:grid;
- grid-template-columns:1fr 190px;
- gap:10px;
- margin:20px 0;
-}
-input,select{
- background:var(--panel);
- border:1px solid #ffffff20;
- color:white;
- padding:13px;
- border-radius:10px;
- width:100%;
-}
-.filters{
- display:flex;
- gap:8px;
- flex-wrap:wrap;
- margin-bottom:20px;
-}
-.filter.active{
- background:#7627a8;
- border-color:#c084fc;
-}
-.catalog{
- display:grid;
- grid-template-columns:repeat(5,minmax(0,1fr));
- gap:16px;
-}
-.movie{
- background:var(--panel);
- border:1px solid #ffffff15;
- border-radius:14px;
- overflow:hidden;
- cursor:pointer;
- min-width:0;
-}
-.movie:hover{
- transform:translateY(-3px);
- border-color:#a855f7;
-}
-.poster{
- width:100%;
- aspect-ratio:2/3;
- position:relative;
- background:linear-gradient(145deg,#38204e,#151525);
- overflow:hidden;
-}
-.poster img{
- width:100%;
- height:100%;
- object-fit:cover;
- display:block;
- position:absolute;
- inset:0;
- opacity:0;
- transition:opacity .25s;
-}
+.primary{background:linear-gradient(100deg,#9333ea,#db2777);border:0}
+main{max-width:1200px;margin:auto;padding:20px 14px}
+.hero{padding:35px 25px;border-radius:20px;background:linear-gradient(120deg,#281342,#48204f);margin-bottom:28px}
+.hero h1{font-size:clamp(30px,6vw,48px);margin:0 0 12px}
+.hero p{color:#e0d2f3;line-height:1.5}
+.controls{display:grid;grid-template-columns:1fr 190px;gap:10px;margin:20px 0}
+input,select{background:var(--panel);border:1px solid #ffffff20;color:white;padding:13px;border-radius:10px;width:100%}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filter.active{background:#7627a8;border-color:#c084fc}
+.catalog{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.movie{background:var(--panel);border:1px solid #ffffff15;border-radius:14px;overflow:hidden;cursor:pointer;min-width:0}
+.movie:hover{transform:translateY(-3px);border-color:#a855f7}
+.poster{width:100%;aspect-ratio:2/3;position:relative;background:linear-gradient(145deg,#38204e,#151525);overflow:hidden}
+.poster img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;opacity:0;transition:opacity .25s}
 .poster img.loaded{opacity:1}
-.poster-fallback{
- position:absolute;
- inset:0;
- z-index:1;
- display:flex;
- align-items:center;
- justify-content:center;
- text-align:center;
- padding:12px;
- color:#e9caff;
- font-size:18px;
- font-weight:bold;
-}
+.poster-fallback{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;color:#e9caff;font-size:18px;font-weight:bold}
 .info{padding:11px}
-.title{
- font-weight:bold;
- line-height:1.35;
-}
-.meta{
- color:var(--muted);
- font-size:12px;
- margin-top:7px;
-}
-.actions{
- display:flex;
- gap:6px;
- margin-top:10px;
-}
-.actions button{
- flex:1;
- padding:8px 4px;
- font-size:12px;
-}
-.empty{
- grid-column:1/-1;
- text-align:center;
- padding:35px;
- background:var(--panel);
- border-radius:12px;
- color:var(--muted);
-}
-.section{
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:10px;
-}
-.modal{
- display:none;
- position:fixed;
- inset:0;
- background:#000d;
- z-index:30;
- align-items:center;
- justify-content:center;
- padding:15px;
-}
+.title{font-weight:bold;line-height:1.35}
+.meta{color:var(--muted);font-size:12px;margin-top:7px}
+.actions{display:flex;gap:6px;margin-top:10px}
+.actions button{flex:1;padding:8px 4px;font-size:12px}
+.empty{grid-column:1/-1;text-align:center;padding:35px;background:var(--panel);border-radius:12px;color:var(--muted)}
+.section{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.modal{display:none;position:fixed;inset:0;background:#000d;z-index:30;align-items:center;justify-content:center;padding:15px}
 .modal.show{display:flex}
-.modal-box{
- background:var(--panel);
- border:1px solid #ffffff25;
- border-radius:18px;
- padding:20px;
- width:min(650px,100%);
- max-height:90vh;
- overflow:auto;
- position:relative;
-}
-.close{
- position:absolute;
- right:12px;
- top:12px;
-}
-.detail{
- display:grid;
- grid-template-columns:150px 1fr;
- gap:16px;
- margin-top:20px;
-}
-.detail img{
- width:100%;
- aspect-ratio:2/3;
- object-fit:cover;
- border-radius:10px;
-}
-.muted{
- color:var(--muted);
- line-height:1.5;
-}
-footer{
- text-align:center;
- padding:25px;
- color:var(--muted);
-}
-@media(max-width:900px){
- .catalog{grid-template-columns:repeat(4,minmax(0,1fr))}
-}
+.modal-box{background:var(--panel);border:1px solid #ffffff25;border-radius:18px;padding:20px;width:min(650px,100%);max-height:90vh;overflow:auto;position:relative}
+.close{position:absolute;right:12px;top:12px}
+.detail{display:grid;grid-template-columns:150px 1fr;gap:16px;margin-top:20px}
+.detail img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:10px}
+.muted{color:var(--muted);line-height:1.5}
+footer{text-align:center;padding:25px;color:var(--muted)}
+@media(max-width:900px){.catalog{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:600px){
- .catalog{
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
- }
+ .catalog{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
  .controls{grid-template-columns:1fr}
  .header{justify-content:center}
  .detail{grid-template-columns:105px 1fr}
@@ -246,7 +57,6 @@ footer{
 }
 </style>
 </head>
-
 <body>
 
 <header>
@@ -261,7 +71,6 @@ footer{
 </header>
 
 <main>
-
 <section class="hero">
  <h1>Твой мир кино</h1>
  <p>Выбирай фильмы, открывай новые истории и собирай собственную коллекцию.</p>
@@ -286,7 +95,6 @@ footer{
 
 <div class="filters" id="filters"></div>
 <div class="catalog" id="catalog"></div>
-
 </main>
 
 <footer>KinoMezafilms © 2026</footer>
@@ -302,7 +110,7 @@ footer{
 "use strict";
 
 const movies=[
- [26.11.2026 13:41] KinoMezafilms: ["fightclub","Бойцовский клуб",1999,"Триллер",8.8,"Сотрудник офиса знакомится с загадочным человеком и создаёт подпольный клуб.","Fight Club"],
+["fightclub","Бойцовский клуб",1999,"Триллер",8.8,"Сотрудник офиса знакомится с загадочным человеком и создаёт подпольный клуб.","Fight Club"],
 ["pulpfiction","Криминальное чтиво",1994,"Криминал",8.8,"Несколько историй из преступного мира переплетаются в Лос-Анджелесе.","Pulp Fiction"],
 ["leon","Леон",1994,"Боевик",8.5,"Наёмный убийца неожиданно становится защитником девочки.","Léon: The Professional"],
 ["departed","Отступники",2006,"Триллер",8.5,"Полицейский и преступник внедряются в организации друг друга.","The Departed"],
@@ -331,8 +139,7 @@ const movies=[
 ["intouchables","1+1",2011,"Комедия",8.5,"Необычная дружба меняет жизнь богатого аристократа и его помощника.","The Intouchables"],
 ["superbad","SuperПерцы",2007,"Комедия",7.6,"Два школьных друга пытаются устроить незабываемую вечеринку.","Superbad"],
 ["knightday","Рыцарь дня",2010,"Боевик",6.3,"Обычная женщина оказывается втянута в международную погоню.","Knight and Day"],
-["missionfallout","Миссия невыполнима: Последствия",2018,"Боевик",7.7,"Команда агента Ханта пытается предотвратить глобальную катастрофу.
-[26.11.2026 13:41] KinoMezafilms: ","Mission: Impossible – Fallout"],
+["missionfallout","Миссия невыполнима: Последствия",2018,"Боевик",7.7,"Команда агента Ханта пытается предотвратить глобальную катастрофу.","Mission: Impossible – Fallout"],
 ["nobody","Никто",2021,"Боевик",7.4,"На первый взгляд обычный семьянин раскрывает своё опасное прошлое.","Nobody (2021 film)"],
 ["equalizer","Великий уравнитель",2014,"Боевик",7.2,"Бывший агент решает защищать тех, кто не может постоять за себя.","The Equalizer (film)"],
 ["taken","Заложница",2008,"Боевик",7.7,"Бывший спецагент отправляется спасать похищенную дочь.","Taken (film)"],
@@ -353,6 +160,7 @@ const movies=[
 ["insideout","Головоломка",2015,"Мультфильм",8.1,"Эмоции девочки учатся работать вместе во время больших перемен.","Inside Out (2015 film)"],
 ["zootopia","Зверополис",2016,"Мультфильм",8.0,"Кролик-полицейский и лис раскрывают загадочное дело.","Zootopia"],
 ["howtotrain","Как приручить дракона",2010,"Мультфильм",8.1,"Юный викинг заводит дружбу с драконом.","How to Train Your Dragon (film)"],
+
 ["inception","Начало",2010,"Фантастика",8.8,"Вор проникает в сны людей и получает необычное задание.","Inception"],
 ["interstellar","Интерстеллар",2014,"Фантастика",8.7,"Исследователи отправляются через червоточину на поиски нового дома.","Interstellar (film)"],
 ["matrix","Матрица",1999,"Фантастика",8.7,"Хакер узнаёт, что привычный мир может быть искусственной реальностью.","The Matrix"],
@@ -401,24 +209,15 @@ const movies=[
 ["terminator","Терминатор 2",1991,"Фантастика",8.6,"Киборг должен защитить мальчика из будущего.","Terminator 2: Judgment Day"],
 ["backfuture","Назад в будущее",1985,"Фантастика",8.5,"Подросток случайно отправляется в прошлое.","Back to the Future"]
 ].map(x=>({
- id:x[0],
- title:x[1],
- year:x[2],
- genre:x[3],
- rating:x[4],
- description:x[5],
- wiki:x[6]
+ id:x[0],title:x[1],year:x[2],genre:x[3],
+ rating:x[4],description:x[5],wiki:x[6]
 }));
 
 let genre="Все";
 let mode="catalog";
 
-const favorites=new Set(
- JSON.parse(localStorage.getItem("km_favorites")||"[]")
-);
-const later=new Set(
- JSON.parse(localStorage.getItem("km_later")||"[]")
-);
+const favorites=new Set(JSON.parse(localStorage.getItem("km_favorites")||"[]"));
+const later=new Set(JSON.parse(localStorage.getItem("km_later")||"[]"));
 
 /* ХРАНИЛИЩЕ ПОСТЕРОВ */
 
@@ -426,7 +225,6 @@ const POSTER_DB_NAME="KinoMezafilmsPosters";
 const POSTER_STORE_NAME="posters";
 const posterCache=new Map();
 const posterRequests=new Map();
-
 let posterDBPromise=null;
 
 function openPosterDB(){
@@ -442,7 +240,6 @@ function openPosterDB(){
 
   request.onupgradeneeded=()=>{
    const db=request.result;
-
    if(!db.objectStoreNames.contains(POSTER_STORE_NAME)){
     db.createObjectStore(POSTER_STORE_NAME);
    }
@@ -452,10 +249,7 @@ function openPosterDB(){
   request.onerror=()=>reject(request.error);
  });
 
- posterDBPromise.catch(()=>{
-  posterDBPromise=null;
- });
-
+ posterDBPromise.catch(()=>{posterDBPromise=null});
  return posterDBPromise;
 }
 
@@ -465,7 +259,6 @@ async function getSavedPoster(id){
  return new Promise((resolve,reject)=>{
   const transaction=db.transaction(POSTER_STORE_NAME,"readonly");
   const request=transaction.objectStore(POSTER_STORE_NAME).get(id);
-
   request.onsuccess=()=>resolve(request.result||null);
   request.onerror=()=>reject(request.error);
  });
@@ -476,23 +269,16 @@ async function savePoster(id,blob){
 
  return new Promise((resolve,reject)=>{
   const transaction=db.transaction(POSTER_STORE_NAME,"readwrite");
-
   transaction.objectStore(POSTER_STORE_NAME).put(blob,id);
-
   transaction.oncomplete=()=>resolve(true);
   transaction.onerror=()=>reject(transaction.error);
   transaction.onabort=()=>reject(transaction.error);
-}
-
-);
+ });
 }
 
 function getLegacyPoster(id){
- try{
-  return localStorage.getItem("km_poster_"+id);
- }catch(error){
-  return null;
- }
+ try{return localStorage.getItem("km_poster_"+id)}
+ catch(error){return null}
 }
 
 async function findPosterUrl(movie){
@@ -505,30 +291,18 @@ async function findPosterUrl(movie){
     encodeURIComponent(title),
     {headers:{"Accept":"application/json"}}
    );
-
    if(!response.ok)throw new Error("Wikipedia REST");
-
    const data=await response.json();
-
-   return data.thumbnail?.source||
-          data.originalimage?.source||
-          null;
+   return data.thumbnail?.source||data.originalimage?.source||null;
   },
-
   async()=>{
-   const url=
-    "https://en.wikipedia.org/w/api.php?action=query&format=json"+
+   const url="https://en.wikipedia.org/w/api.php?action=query&format=json"+
     "&prop=pageimages&piprop=thumbnail&pithumbsize=700"+
     "&titles="+encodeURIComponent(movie.wiki)+"&origin=*";
-
    const response=await fetch(url);
-
    if(!response.ok)throw new Error("Wikipedia API");
-
    const data=await response.json();
-
-   return Object.values(data.query?.pages||{})[0]
-    ?.thumbnail?.source||null;
+   return Object.values(data.query?.pages||{})[0]?.thumbnail?.source||null;
   }
  ];
 
@@ -540,45 +314,31 @@ async function findPosterUrl(movie){
    console.warn("Источник постера недоступен:",error);
   }
  }
-
  return null;
 }
 
 async function downloadAndSavePoster(id,imageUrl){
  const response=await fetch(imageUrl,{mode:"cors"});
-
- if(!response.ok){
-  throw new Error("Не удалось скачать изображение");
- }
+ if(!response.ok)throw new Error("Не удалось скачать изображение");
 
  const blob=await response.blob();
-
  if(!blob.type.startsWith("image/")||blob.size===0){
   throw new Error("Получен некорректный файл изображения");
  }
 
  await savePoster(id,blob);
-
  const localUrl=URL.createObjectURL(blob);
  posterCache.set(id,localUrl);
-
  return localUrl;
 }
 
 async function getPoster(movie){
- if(posterCache.has(movie.id)){
-  return posterCache.get(movie.id);
- }
-
- if(posterRequests.has(movie.id)){
-  return posterRequests.get(movie.id);
- }
+ if(posterCache.has(movie.id))return posterCache.get(movie.id);
+ if(posterRequests.has(movie.id))return posterRequests.get(movie.id);
 
  const task=(async()=>{
-  // 1. Сначала используем уже сохранённый файл.
   try{
    const savedBlob=await getSavedPoster(movie.id);
-
    if(savedBlob instanceof Blob&&savedBlob.size>0){
     const localUrl=URL.createObjectURL(savedBlob);
     posterCache.set(movie.id,localUrl);
@@ -588,53 +348,33 @@ async function getPoster(movie){
    console.warn("Не удалось прочитать сохранённый постер:",error);
   }
 
-  // 2. Проверяем старую ссылку из предыдущей версии сайта.
   const oldUrl=getLegacyPoster(movie.id);
-
   if(oldUrl){
-   try{
-    return await downloadAndSavePoster(movie.id,oldUrl);
-   }catch(error){
-    console.warn("Старая ссылка не сработала:",error);
-   }
+   try{return await downloadAndSavePoster(movie.id,oldUrl)}
+   catch(error){console.warn("Старая ссылка не сработала:",error)}
   }
 
-  // 3. Ищем новый адрес постера.
   const imageUrl=await findPosterUrl(movie);
-
   if(!imageUrl)return null;
 
-  // 4. Сохраняем сам файл, если источник разрешает скачивание.
   try{
    return await downloadAndSavePoster(movie.id,imageUrl);
   }catch(error){
    console.warn("Не удалось сохранить файл постера:",error);
-
-   // Показываем изображение по исходной ссылке.
-   // Не удаляем ранее сохранённые данные.
    posterCache.set(movie.id,imageUrl);
-
-   try{
-    localStorage.setItem("km_poster_"+movie.id,imageUrl);
-   }catch(storageError){}
-
+   try{localStorage.setItem("km_poster_"+movie.id,imageUrl)}catch(storageError){}
    return imageUrl;
   }
  })();
 
  posterRequests.set(movie.id,task);
-
- try{
-  return await task;
- }finally{
-  posterRequests.delete(movie.id);
- }
+ try{return await task}
+ finally{posterRequests.delete(movie.id)}
 }
 
 function loadPoster(movie,container){
  const img=container.querySelector("img");
  const fallback=container.querySelector(".poster-fallback");
-
  if(!img||!fallback)return;
 
  img.onload=()=>{
@@ -645,14 +385,11 @@ function loadPoster(movie,container){
  img.onerror=()=>{
   img.classList.remove("loaded");
   fallback.style.display="flex";
-
-  // Важно: больше не удаляем сохранённые постеры.
   console.warn("Не удалось показать постер:",movie.title);
  };
 
  getPoster(movie).then(url=>{
   if(!url||!container.isConnected)return;
-
   if(img.dataset.posterSrc!==url){
    img.dataset.posterSrc=url;
    img.src=url;
@@ -666,23 +403,13 @@ function loadPoster(movie,container){
 
 function esc(s){
  return String(s).replace(/[&<>"']/g,c=>({
-  "&":"&amp;",
-  "<":"&lt;",
-  ">":"&gt;",
-  '"':"&quot;",
-  "'":"&#39;"
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
  }[c]));
 }
 
 function save(){
- localStorage.setItem(
-  "km_favorites",
-  JSON.stringify([...favorites])
- );
- localStorage.setItem(
-  "km_later",
-  JSON.stringify([...later])
- );
+ localStorage.setItem("km_favorites",JSON.stringify([...favorites]));
+ localStorage.setItem("km_later",JSON.stringify([...later]));
 }
 
 /* ЖАНРЫ И КАТАЛОГ */
@@ -694,8 +421,7 @@ function getGenres(){
 function renderFilters(){
  document.getElementById("filters").innerHTML=
  getGenres().map(g=>
-  `<button class="filter ${genre===g?"active":""}"
-   onclick="setGenre('${esc(g)}')">${esc(g)}</button>`
+  `<button class="filter ${genre===g?"active":""}" onclick="setGenre('${esc(g)}')">${esc(g)}</button>`
  ).join("");
 }
 
@@ -729,58 +455,40 @@ function showLater(){
 }
 
 function toggleFavorite(id){
- if(favorites.has(id)){
-  favorites.delete(id);
- }else{
-  favorites.add(id);
- }
+ if(favorites.has(id))favorites.delete(id);
+ else favorites.add(id);
  save();
  render();
 }
 
 function toggleLater(id){
- if(later.has(id)){
-  later.delete(id);
- }else{
-  later.add(id);
- }
+ if(later.has(id))later.delete(id);
+ else later.add(id);
  save();
  render();
 }
 
 function render(){
- const search=document.getElementById("search")
-  .value.toLowerCase().trim();
-
+ const search=document.getElementById("search").value.toLowerCase().trim();
  const sort=document.getElementById("sort").value;
 
  let list=movies.filter(m=>
-  (
-   m.title.toLowerCase().includes(search)||
-   String(m.year).includes(search)
-  )&&
+  (m.title.toLowerCase().includes(search)||String(m.year).includes(search))&&
   (genre==="Все"||m.genre===genre)&&
-  (
-   mode==="favorites"?favorites.has(m.id):
-   mode==="later"?later.has(m.id):true
-  )
+  (mode==="favorites"?favorites.has(m.id):
+   mode==="later"?later.has(m.id):true)
  );
 
  if(sort==="new")list.sort((a,b)=>b.year-a.year);
  if(sort==="old")list.sort((a,b)=>a.year-b.year);
- if(sort==="name")list.sort((a,b)=>
-  a.title.localeCompare(b.title,"ru")
- );
+ if(sort==="name")list.sort((a,b)=>a.title.localeCompare(b.title,"ru"));
  if(sort==="rating")list.sort((a,b)=>b.rating-a.rating);
 
- document.getElementById("count").textContent=
-  "Фильмов: "+list.length;
-
+ document.getElementById("count").textContent="Фильмов: "+list.length;
  const catalog=document.getElementById("catalog");
 
  if(!list.length){
-  catalog.innerHTML=
-   '<div class="empty">Фильмы не найдены.</div>';
+  catalog.innerHTML='<div class="empty">Фильмы не найдены.</div>';
   return;
  }
 
@@ -792,16 +500,10 @@ function render(){
    </div>
    <div class="info">
     <div class="title">${esc(m.title)}</div>
-    <div class="meta">
-     ${m.year} · ${esc(m.genre)} · ★ ${m.rating}
-    </div>
+    <div class="meta">${m.year} · ${esc(m.genre)} · ★ ${m.rating}</div>
     <div class="actions">
-     <button onclick="event.stopPropagation();toggleFavorite('${m.id}')">
-      ${favorites.has(m.id)?"♥":"♡"}
-     </button>
-     <button onclick="event.stopPropagation();toggleLater('${m.id}')">
-      ${later.has(m.id)?"✓":"＋"}
-     </button>
+     <button onclick="event.stopPropagation();toggleFavorite('${m.id}')">${favorites.has(m.id)?"♥":"♡"}</button>
+     <button onclick="event.stopPropagation();toggleLater('${m.id}')">${later.has(m.id)?"✓":"＋"}</button>
     </div>
    </div>
   </article>
@@ -827,39 +529,26 @@ function openMovie(id){
 
  document.getElementById("details").innerHTML=`
   <h2>${esc(m.title)}</h2>
-
   <div class="detail">
    <div class="poster" id="detailPoster">
     <div class="poster-fallback">${esc(m.title)}</div>
     <img alt="Постер ${esc(m.title)}">
    </div>
-
    <div>
-    <p class="muted">
-     ${m.year} · ${esc(m.genre)} · ★ ${m.rating}
-    </p>
-
+    <p class="muted">${m.year} · ${esc(m.genre)} · ★ ${m.rating}</p>
     <p>${esc(m.description)}</p>
-
     <button onclick="toggleFavorite('${m.id}');openMovie('${m.id}')">
-     ${favorites.has(m.id)?
-      "Убрать из избранного":
-      "В избранное"}
+     ${favorites.has(m.id)?"Убрать из избранного":"В избранное"}
     </button>
-
     <br><br>
-
     <button onclick="toggleLater('${m.id}');openMovie('${m.id}')">
-     ${later.has(m.id)?
-      "Убрать из списка":
-      "Посмотреть позже"}
+     ${later.has(m.id)?"Убрать из списка":"Посмотреть позже"}
     </button>
    </div>
   </div>
  `;
 
  document.getElementById("modal").classList.add("show");
-
  loadPoster(m,document.getElementById("detailPoster"));
 }
 
@@ -871,7 +560,6 @@ function closeModal(){
 
 renderFilters();
 render();
-
 </script>
 </body>
 </html>
