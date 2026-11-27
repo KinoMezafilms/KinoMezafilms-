@@ -62,6 +62,15 @@ footer{text-align:center;padding:25px;color:var(--muted)}
  .hero{padding:25px 18px}
  .modal-box{padding:16px}
 }
+
+.admin-button{background:#3b1760;border-color:#a855f7}
+.admin-panel{display:none;background:#171729;border:1px solid #a855f755;border-radius:16px;padding:16px;margin:18px 0}
+.admin-panel.show{display:block}
+.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.admin-grid textarea{min-height:100px;resize:vertical}
+.admin-grid .wide{grid-column:1/-1}
+.admin-status{color:#c084fc;margin:10px 0}
+@media(max-width:600px){.admin-grid{grid-template-columns:1fr}.admin-grid .wide{grid-column:auto}}
 </style>
 </head>
 <body>
@@ -72,6 +81,7 @@ footer{text-align:center;padding:25px;color:var(--muted)}
   <button onclick="showCatalog()">Каталог</button>
   <button onclick="showFavorites()">♥ Избранное</button>
   <button onclick="showLater()">Посмотреть позже</button>
+  <button class="admin-button" onclick="openAdmin()">⚙ Админ</button>
  </div>
 </div>
 </header>
@@ -86,6 +96,41 @@ footer{text-align:center;padding:25px;color:var(--muted)}
  <h2 id="heading">Каталог фильмов</h2>
  <span id="count" class="muted"></span>
 </div>
+
+<section id="adminPanel" class="admin-panel">
+ <h2>Админ-панель KinoMezafilms</h2>
+ <div id="adminAuth">
+  <p>Вход администратора Supabase</p>
+  <div class="admin-grid">
+   <input id="adminEmail" type="email" placeholder="Email администратора">
+   <input id="adminPassword" type="password" placeholder="Пароль">
+   <button class="primary wide" onclick="adminLogin()">Войти</button>
+  </div>
+ </div>
+ <div id="adminTools" style="display:none">
+  <div class="section"><strong>Добавить / изменить фильм</strong><button onclick="adminLogout()">Выйти</button></div>
+  <div class="admin-grid" style="margin-top:12px">
+   <input id="fId" placeholder="ID (например inception)">
+   <input id="fTitle" placeholder="Название фильма">
+   <input id="fYear" type="number" placeholder="Год">
+   <input id="fGenre" placeholder="Жанр">
+   <input id="fRating" type="number" step="0.1" placeholder="Рейтинг">
+   <input id="fWiki" placeholder="Wikipedia title (для постера)">
+   <textarea id="fDescription" class="wide" placeholder="Описание"></textarea>
+   <input id="fVideo" class="wide" placeholder="Ссылка на фильм (разрешённый источник HTTPS)">
+   <input id="fTrailer" class="wide" placeholder="Ссылка на трейлер (HTTPS)">
+   <label class="wide">Постер: <input id="fPoster" type="file" accept="image/jpeg,image/png,image/webp"></label>
+   <label><input id="fNew" type="checkbox" style="width:auto"> Новинка</label>
+   <label><input id="fPopular" type="checkbox" style="width:auto"> Популярный</label>
+   <button class="primary" onclick="adminSaveMovie()">Сохранить фильм</button>
+   <button onclick="adminClearForm()">Очистить форму</button>
+  </div>
+  <p id="adminStatus" class="admin-status"></p>
+  <h3>Фильмы в базе</h3>
+  <button onclick="importLocalCatalog()">Загрузить текущий каталог в базу</button>
+  <div id="adminMovieList"></div>
+ </div>
+</section>
 <div class="controls">
  <input id="search" placeholder="Найти фильм..." oninput="render()">
  <select id="sort" onchange="render()">
@@ -105,6 +150,7 @@ footer{text-align:center;padding:25px;color:var(--muted)}
   <div id="details"></div>
  </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 "use strict";
 
@@ -377,7 +423,7 @@ function getVideoEmbed(source){
  return null;
 }
 function createVideoPlayer(movie){
- const source=videoSources[movie.id];
+ const source=movie.video_url||movieStreams[movie.id]?.video_url||videoSources[movie.id];
  if(!source){
   return `<div class="video-placeholder"><strong>▶ Видео пока не добавлено</strong><span>Для этого фильма ещё не указан видеoисточник.</span><span class="video-note">Когда добавишь разрешённую ссылку на MP4, WebM, YouTube или Vimeo в videoSources, видео появится здесь.</span></div>`;
  }
@@ -475,9 +521,136 @@ function closeModal(){
 }
 document.addEventListener("keydown",event=>{if(event.key==="Escape")closeModal()});
 
+
+/* Supabase integration */
+const SUPABASE_URL="https://randamxoghulcnjncybw.supabase.co";
+const SUPABASE_KEY="sb_publishable_WNSviuHLFahwoS5_hB53Cw_2MQpECdi";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let dbMoviesLoaded=false;
+const seedMovies=movies.map(m=>({...m}));
+let adminUser=null;
+let movieStreams={};
+
+function mapDbMovie(row){
+ return {id:row.id,title:row.title,year:row.year||0,genre:row.genre||"Без жанра",
+ rating:Number(row.rating||0),description:row.description||"",wiki:row.wiki||row.title,
+ poster_uri:row.poster_uri||null,is_new:!!row.is_new,is_popular:!!row.is_popular,
+ video_url:movieStreams[row.id]?.video_url||"",trailer_url:movieStreams[row.id]?.trailer_url||""};
+}
+async function loadFromSupabase(){
+ try{
+  const [m,s]=await Promise.all([
+   sb.from("movies").select("*").order("title"),
+   sb.from("movie_streams").select("movie_id,video_url,trailer_url")
+  ]);
+  if(m.error)throw m.error;
+  if(s.error)throw s.error;
+  movieStreams={};
+  (s.data||[]).forEach(row=>movieStreams[row.movie_id]=row);
+  if(m.data&&m.data.length){
+   movies.splice(0,movies.length,...m.data.map(mapDbMovie));
+  }
+  dbMoviesLoaded=true;
+  renderFilters();render();
+ }catch(err){console.warn("Supabase catalog load failed:",err);setAdminStatus("Не удалось загрузить базу: "+err.message)}
+}
+function openAdmin(){document.getElementById("adminPanel").classList.toggle("show");}
+async function adminLogin(){
+ const email=document.getElementById("adminEmail").value.trim();
+ const password=document.getElementById("adminPassword").value;
+ setAdminStatus("Входим...");
+ const {data,error}=await sb.auth.signInWithPassword({email,password});
+ if(error){setAdminStatus("Ошибка входа: "+error.message);return}
+ const {data:check,error:checkError}=await sb.from("admins").select("user_id").eq("user_id",data.user.id).maybeSingle();
+ if(checkError||!check){await sb.auth.signOut();setAdminStatus("Этот аккаунт не назначен администратором.");return}
+ adminUser=data.user;
+ document.getElementById("adminAuth").style.display="none";
+ document.getElementById("adminTools").style.display="block";
+ setAdminStatus("Вход выполнен. Администратор подтверждён.");
+ renderAdminMovieList();
+}
+async function adminLogout(){
+ await sb.auth.signOut();adminUser=null;
+ document.getElementById("adminAuth").style.display="block";
+ document.getElementById("adminTools").style.display="none";
+ setAdminStatus("Вы вышли из админ-панели.");
+}
+function setAdminStatus(msg){const el=document.getElementById("adminStatus");if(el)el.textContent=msg}
+function adminClearForm(){
+ ["fId","fTitle","fYear","fGenre","fRating","fWiki","fDescription","fVideo","fTrailer"].forEach(id=>document.getElementById(id).value="");
+ document.getElementById("fPoster").value="";
+ document.getElementById("fNew").checked=false;document.getElementById("fPopular").checked=false;
+}
+function adminEditMovie(id){
+ const m=movies.find(x=>x.id===id);if(!m)return;
+ document.getElementById("fId").value=m.id;document.getElementById("fId").disabled=true;
+ document.getElementById("fTitle").value=m.title;document.getElementById("fYear").value=m.year;
+ document.getElementById("fGenre").value=m.genre;document.getElementById("fRating").value=m.rating;
+ document.getElementById("fWiki").value=m.wiki||"";
+ document.getElementById("fDescription").value=m.description||"";
+ document.getElementById("fVideo").value=m.video_url||movieStreams[id]?.video_url||"";
+ document.getElementById("fTrailer").value=m.trailer_url||movieStreams[id]?.trailer_url||"";
+ document.getElementById("fNew").checked=!!m.is_new;document.getElementById("fPopular").checked=!!m.is_popular;
+ window.scrollTo({top:document.getElementById("adminPanel").offsetTop,behavior:"smooth"});
+}
+async function adminSaveMovie(){
+ if(!adminUser){setAdminStatus("Сначала войдите.");return}
+ const id=document.getElementById("fId").value.trim(),title=document.getElementById("fTitle").value.trim();
+ if(!id||!title){setAdminStatus("Заполни ID и название.");return}
+ const row={id,title,year:Number(document.getElementById("fYear").value)||null,
+ genre:document.getElementById("fGenre").value.trim(),rating:Number(document.getElementById("fRating").value)||null,
+ description:document.getElementById("fDescription").value.trim(),wiki:document.getElementById("fWiki").value.trim(),
+ is_new:document.getElementById("fNew").checked,is_popular:document.getElementById("fPopular").checked,updated_at:new Date().toISOString()};
+ setAdminStatus("Сохраняю...");
+ const file=document.getElementById("fPoster").files[0];
+ if(file){
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){setAdminStatus("Разрешены JPG, PNG или WebP.");return}
+  const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg";
+  const path=id+"-"+Date.now()+"."+ext;
+  const upload=await sb.storage.from("movie-posters").upload(path,file,{upsert:true,contentType:file.type});
+  if(upload.error){setAdminStatus("Ошибка загрузки постера: "+upload.error.message);return}
+  row.poster_uri=sb.storage.from("movie-posters").getPublicUrl(path).data.publicUrl;
+ }
+ const saved=await sb.from("movies").upsert(row);
+ if(saved.error){setAdminStatus("Ошибка сохранения: "+saved.error.message);return}
+ const video=document.getElementById("fVideo").value.trim(),trailer=document.getElementById("fTrailer").value.trim();
+ if(video||trailer){
+  const streamPayload={movie_id:id,video_url:video||null,trailer_url:trailer||null,updated_at:new Date().toISOString(),updated_by:adminUser.id};
+  const existingStream=await sb.from("movie_streams").select("id").eq("movie_id",id).maybeSingle();
+  if(existingStream.error){setAdminStatus("Фильм сохранён, но не удалось проверить ссылки: "+existingStream.error.message);return}
+  const stream=existingStream.data
+   ?await sb.from("movie_streams").update(streamPayload).eq("id",existingStream.data.id)
+   :await sb.from("movie_streams").insert(streamPayload);
+  if(stream.error){setAdminStatus("Фильм сохранён, но ссылки не сохранены: "+stream.error.message);return}
+ }
+ setAdminStatus("Сохранено!");
+ await loadFromSupabase();renderAdminMovieList();adminClearForm();document.getElementById("fId").disabled=false;
+}
+async function adminDeleteMovie(id){
+ if(!adminUser||!confirm("Удалить фильм "+id+" из каталога?"))return;
+ const {error}=await sb.from("movies").delete().eq("id",id);
+ if(error){setAdminStatus("Ошибка удаления: "+error.message);return}
+ await sb.from("movie_streams").delete().eq("movie_id",id);
+ await loadFromSupabase();renderAdminMovieList();setAdminStatus("Фильм удалён.");
+}
+async function importLocalCatalog(){
+ if(!adminUser){setAdminStatus("Сначала войдите.");return}
+ if(!confirm("Добавить текущие фильмы сайта в Supabase? Существующие записи с такими ID будут обновлены."))return;
+ const rows=seedMovies.map(m=>({id:m.id,title:m.title,year:m.year,genre:m.genre,rating:m.rating,description:m.description,wiki:m.wiki,is_new:false,is_popular:false}));
+ const {error}=await sb.from("movies").upsert(rows);
+ if(error){setAdminStatus("Не удалось импортировать каталог: "+error.message);return}
+ setAdminStatus("Каталог добавлен в базу.");
+ await loadFromSupabase();renderAdminMovieList();
+}
+function renderAdminMovieList(){
+ const el=document.getElementById("adminMovieList");if(!el)return;
+ el.innerHTML=movies.map(m=>`<div style="display:flex;gap:8px;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff20;padding:8px 0"><span>${esc(m.title)} (${m.year||"—"})</span><span><button onclick="adminEditMovie('${esc(m.id)}')">Изменить</button> <button onclick="adminDeleteMovie('${esc(m.id)}')">Удалить</button></span></div>`).join("");
+}
+
 /* Запуск */
 renderFilters();
 render();
+loadFromSupabase();
 </script>
 </body>
 </html>
