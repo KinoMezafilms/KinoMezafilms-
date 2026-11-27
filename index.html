@@ -108,6 +108,11 @@ footer{text-align:center;padding:25px;color:var(--muted)}
 .social-feed.shorts .social-post-head{margin-top:auto}
 .social-feed.shorts .social-actions button{background:#171729dd}
 @media(max-width:600px){.social-feed.recommendations{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.social-feed.shorts{height:calc(100dvh - 185px)}.social-feed.shorts .social-post{height:calc(100dvh - 195px);min-height:420px}}
+.chat-messages{height:min(55vh,520px);overflow-y:auto;background:#0d0d19;border:1px solid #ffffff20;border-radius:12px;padding:12px;margin:12px 0}
+.chat-bubble{max-width:82%;padding:9px 12px;border-radius:14px;margin:8px 0;background:#292943;overflow-wrap:anywhere}
+.chat-bubble.mine{margin-left:auto;background:#642a91}
+.chat-time{font-size:11px;color:#c5b6d7;margin-top:4px}
+.friend-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #ffffff18;flex-wrap:wrap}
 
 </style>
 </head>
@@ -198,6 +203,8 @@ footer{text-align:center;padding:25px;color:var(--muted)}
    <button onclick="socialSetTab('shorts')">▶ Шорты</button>
    <button onclick="socialSetTab('profile')">👤 Профиль</button>
    <button onclick="socialSetTab('auth')">🔐 Авторизация</button>
+   <button onclick="socialSetTab('friends')">👥 Друзья</button>
+   <button onclick="socialSetTab('messages')">💬 Сообщения</button>
   </nav>
   <section class="social-panel" id="socialAuthPanel">
    <h2>Войти или создать аккаунт</h2>
@@ -231,6 +238,30 @@ footer{text-align:center;padding:25px;color:var(--muted)}
    <p class="social-small">Максимальный размер файла — 50 МБ. Для съёмки с телефона открой сайт по HTTPS.</p>
    <button class="primary" onclick="socialPublish()">Опубликовать</button>
    <div id="socialPublishStatus" class="social-status"></div>
+  </section>
+  <section class="social-panel" id="socialFriendsPanel" style="display:none">
+   <h2>👥 Друзья</h2>
+   <div class="social-grid">
+    <input id="friendSearchInput" class="wide" placeholder="Найти пользователя по имени или @username">
+    <button class="primary wide" onclick="socialSearchUsers()">Найти</button>
+   </div>
+   <div id="friendSearchResults"></div>
+   <h3>Заявки мне</h3><div id="friendIncoming"></div>
+   <h3>Мои заявки</h3><div id="friendOutgoing"></div>
+   <h3>Мои друзья</h3><div id="friendList"></div>
+   <div id="friendsStatus" class="social-status"></div>
+  </section>
+  <section class="social-panel" id="socialMessagesPanel" style="display:none">
+   <h2>💬 Личные сообщения</h2>
+   <div class="social-grid">
+    <select id="chatFriendSelect" class="wide" onchange="socialOpenChat(this.value)"><option value="">Выбери друга</option></select>
+   </div>
+   <div id="chatMessages" class="chat-messages"><div class="social-empty">Выбери друга, чтобы открыть переписку.</div></div>
+   <div class="social-grid">
+    <input id="chatMessageInput" class="wide" placeholder="Напиши сообщение..." onkeydown="if(event.key==='Enter')socialSendMessage()">
+    <button class="primary wide" onclick="socialSendMessage()">Отправить</button>
+   </div>
+   <div id="chatStatus" class="social-status"></div>
   </section>
   <div class="social-top" id="socialFeedHeader"><h2 id="socialFeedTitle">Рекомендации</h2><button onclick="socialLoadFeed()">↻ Обновить</button></div>
   <div id="socialFeed" class="social-feed"><div class="social-empty">Войди в аккаунт или обнови ленту.</div></div>
@@ -785,16 +816,22 @@ function socialSetTab(tab){
  const create=document.getElementById("socialCreatePanel");
  const header=document.getElementById("socialFeedHeader");
  const feed=document.getElementById("socialFeed");
- const titles={recommendations:"Рекомендации",shorts:"Шорты",profile:"Мой профиль",auth:"Авторизация"};
+ const friends=document.getElementById("socialFriendsPanel");
+ const messages=document.getElementById("socialMessagesPanel");
+ const titles={recommendations:"Рекомендации",shorts:"Шорты",profile:"Мой профиль",auth:"Авторизация",friends:"Друзья",messages:"Сообщения"};
  document.getElementById("socialFeedTitle").textContent=titles[tab]||"Рекомендации";
  auth.style.display=tab==="auth"?"block":"none";
+ friends.style.display=tab==="friends"&&logged?"block":"none";
+ messages.style.display=tab==="messages"&&logged?"block":"none";
+ if(tab==="friends"&&logged)socialLoadFriends();
+ if(tab==="messages"&&logged)socialLoadFriends();
  profile.style.display=tab==="profile"&&logged?"block":"none";
  create.style.display=tab==="profile"&&logged?"block":"none";
  header.style.display=(tab==="recommendations"||tab==="shorts"||(tab==="profile"&&logged))?"flex":"none";
  feed.style.display=(tab==="recommendations"||tab==="shorts"||(tab==="profile"&&logged))?"grid":"none";
  feed.classList.toggle("recommendations",tab==="recommendations");
  feed.classList.toggle("shorts",tab==="shorts");
- if(tab==="profile"&&!logged){
+ if((tab==="profile"||tab==="friends"||tab==="messages")&&!logged){
   auth.style.display="block";
   socialStatus("socialAuthStatus","Чтобы открыть профиль, сначала войди или зарегистрируйся.");
  }
@@ -1127,6 +1164,73 @@ async function socialDeletePost(postId){
  }
  if(data.storage_path)await sb.storage.from("social-media").remove([data.storage_path]);
  await socialLoadFeed();
+}
+
+
+// Друзья и личные сообщения. Таблицы friend_requests и direct_messages создаются SQL-скриптом ниже.
+let socialChatFriend=null;
+async function socialSearchUsers(){
+ if(!socialUser)return;
+ const q=document.getElementById("friendSearchInput").value.trim().replace(/^@/,"");
+ const box=document.getElementById("friendSearchResults");
+ if(!q){box.innerHTML='<div class="social-small">Введи имя или username.</div>';return}
+ const {data,error}=await sb.from("profiles").select("user_id,username,display_name,avatar_url").or("username.ilike.%"+q+"%,display_name.ilike.%"+q+"%").neq("user_id",socialUser.id).limit(20);
+ if(error){box.textContent="Ошибка поиска: "+error.message;return}
+ if(!data?.length){box.innerHTML='<div class="social-small">Пользователи не найдены.</div>';return}
+ box.innerHTML=data.map(p=>'<div class="friend-row"><span><strong>'+esc(p.display_name||p.username||"Пользователь")+'</strong> <span class="social-small">@'+esc(p.username||"")+'</span></span><button onclick="socialSendFriendRequest(\''+esc(p.user_id)+'\')">Добавить в друзья</button></div>').join("");
+}
+async function socialSendFriendRequest(userId){
+ const {error}=await sb.from("friend_requests").insert({sender_id:socialUser.id,receiver_id:userId,status:"pending"});
+ socialStatus("friendsStatus",error?"Не удалось отправить заявку: "+error.message:"Заявка отправлена!");
+ await socialLoadFriends();
+}
+async function socialLoadFriends(){
+ if(!socialUser)return;
+ const {data:rows,error}=await sb.from("friend_requests").select("id,sender_id,receiver_id,status,created_at").or("sender_id.eq."+socialUser.id+",receiver_id.eq."+socialUser.id).order("created_at",{ascending:false}).limit(200);
+ if(error){socialStatus("friendsStatus","Ошибка загрузки друзей: "+error.message);return}
+ const pendingIn=(rows||[]).filter(x=>x.receiver_id===socialUser.id&&x.status==="pending");
+ const pendingOut=(rows||[]).filter(x=>x.sender_id===socialUser.id&&x.status==="pending");
+ const accepted=(rows||[]).filter(x=>x.status==="accepted");
+ const ids=[...new Set((rows||[]).map(x=>x.sender_id===socialUser.id?x.receiver_id:x.sender_id))];
+ const {data:profiles}=ids.length?await sb.from("profiles").select("user_id,username,display_name,avatar_url").in("user_id",ids):{data:[]};
+ const byId={};(profiles||[]).forEach(p=>byId[p.user_id]=p);
+ const name=id=>{const p=byId[id]||{};return esc(p.display_name||p.username||"Пользователь")+" <span class='social-small'>@"+esc(p.username||"")+"</span>"};
+ document.getElementById("friendIncoming").innerHTML=pendingIn.length?pendingIn.map(x=>'<div class="friend-row"><span>'+name(x.sender_id)+'</span><button onclick="socialRespondFriend(\''+x.id+'\',\'accepted\')">Принять</button> <button onclick="socialRespondFriend(\''+x.id+'\',\'rejected\')">Отклонить</button></div>').join(""):'<div class="social-small">Новых заявок нет.</div>';
+ document.getElementById("friendOutgoing").innerHTML=pendingOut.length?pendingOut.map(x=>'<div class="friend-row">'+name(x.receiver_id)+' <span class="social-small">Ожидает ответа</span></div>').join(""):'<div class="social-small">Исходящих заявок нет.</div>';
+ document.getElementById("friendList").innerHTML=accepted.length?accepted.map(x=>{const id=x.sender_id===socialUser.id?x.receiver_id:x.sender_id;return '<div class="friend-row"><span>'+name(id)+'</span><button onclick="socialGoChat(\''+id+'\')">Написать</button></div>'}).join(""):'<div class="social-small">Пока нет друзей. Найди пользователя выше.</div>';
+ const sel=document.getElementById("chatFriendSelect");
+ const current=sel.value;
+ sel.innerHTML='<option value="">Выбери друга</option>'+accepted.map(x=>{const id=x.sender_id===socialUser.id?x.receiver_id:x.sender_id;const p=byId[id]||{};return '<option value="'+id+'">'+esc(p.display_name||p.username||"Пользователь")+'</option>'}).join("");
+ if(current&&accepted.some(x=>x.sender_id===current||x.receiver_id===current))sel.value=current;
+}
+async function socialRespondFriend(id,status){
+ const {error}=await sb.from("friend_requests").update({status}).eq("id",id).eq("receiver_id",socialUser.id);
+ socialStatus("friendsStatus",error?"Ошибка: "+error.message:"Заявка обновлена.");
+ await socialLoadFriends();
+}
+function socialGoChat(userId){
+ socialSetTab("messages");
+ document.getElementById("chatFriendSelect").value=userId;
+ socialOpenChat(userId);
+}
+async function socialOpenChat(userId){
+ if(!userId){socialChatFriend=null;document.getElementById("chatMessages").innerHTML='<div class="social-empty">Выбери друга.</div>';return}
+ socialChatFriend=userId;
+ const box=document.getElementById("chatMessages");
+ box.innerHTML='<div class="social-small">Загружаю переписку...</div>';
+ const {data,error}=await sb.from("direct_messages").select("id,sender_id,recipient_id,message,created_at").or("and(sender_id.eq."+socialUser.id+",recipient_id.eq."+userId+"),and(sender_id.eq."+userId+",recipient_id.eq."+socialUser.id+")").order("created_at",{ascending:true}).limit(300);
+ if(error){box.textContent="Ошибка чата: "+error.message;return}
+ box.innerHTML=data?.length?data.map(m=>'<div class="chat-bubble '+(m.sender_id===socialUser.id?"mine":"")+'">'+esc(m.message)+'<div class="chat-time">'+new Date(m.created_at).toLocaleString("ru-RU")+'</div></div>').join(""):'<div class="social-empty">Начни переписку первым!</div>';
+ box.scrollTop=box.scrollHeight;
+}
+async function socialSendMessage(){
+ if(!socialUser||!socialChatFriend){socialStatus("chatStatus","Сначала выбери друга.");return}
+ const input=document.getElementById("chatMessageInput");
+ const message=input.value.trim();
+ if(!message)return;
+ const {error}=await sb.from("direct_messages").insert({sender_id:socialUser.id,recipient_id:socialChatFriend,message});
+ if(error){socialStatus("chatStatus","Не удалось отправить: "+error.message);return}
+ input.value="";socialStatus("chatStatus","");await socialOpenChat(socialChatFriend);
 }
 
 if(sb){
