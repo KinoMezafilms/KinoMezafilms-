@@ -923,7 +923,7 @@ async function socialPublish(){
  const url=sb.storage.from("social-media").getPublicUrl(path).data.publicUrl;
  const row={
   user_id:socialUser.id,
-  media_type:file.type.startsWith("video/")?"video":"image",
+  media_type:file.type.startsWith("video/")?"video":"photo",
   media_url:url,
   storage_path:path,
   caption:document.getElementById("socialCaption").value.trim()
