@@ -381,7 +381,9 @@ function getLegacyPoster(id){
  try{return localStorage.getItem("km_poster_"+id)}catch(error){return null}
 }
 async function findPosterUrl(movie){
- const title=movie.wiki.replace(/ /g,"_");
+ const wikiTitle=String(movie.wiki||movie.title||"").trim();
+ if(!wikiTitle)return null;
+ const title=wikiTitle.replace(/ /g,"_");
  const requests=[
   async()=>{
    const response=await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(title),{headers:{"Accept":"application/json"}});
@@ -411,6 +413,8 @@ async function downloadAndSavePoster(id,imageUrl){
  return localUrl;
 }
 async function getPoster(movie){
+ /* Загруженный в Supabase постер всегда важнее старого локального кэша. */
+ if(movie.poster_uri){posterCache.set(movie.id,movie.poster_uri);return movie.poster_uri;}
  if(posterCache.has(movie.id))return posterCache.get(movie.id);
  if(posterRequests.has(movie.id))return posterRequests.get(movie.id);
  const task=(async()=>{
@@ -633,8 +637,15 @@ async function loadFromSupabase(){
   if(s.error)throw s.error;
   movieStreams={};
   (s.data||[]).forEach(row=>movieStreams[row.movie_id]=row);
+  /* Не заменяем локальный каталог данными базы: объединяем записи по ID.
+     Поэтому фильмы из стартового каталога не исчезнут, если в Supabase загружена лишь часть. */
   if(m.data&&m.data.length){
-   movies.splice(0,movies.length,...m.data.map(mapDbMovie));
+   const merged=new Map(movies.map(movie=>[String(movie.id),movie]));
+   m.data.forEach(row=>{
+    const dbMovie=mapDbMovie(row);
+    merged.set(String(dbMovie.id),{...(merged.get(String(dbMovie.id))||{}),...dbMovie});
+   });
+   movies.splice(0,movies.length,...merged.values());
   }
   dbMoviesLoaded=true;
   renderFilters();render();
@@ -665,6 +676,7 @@ async function adminLogout(){
 }
 function setAdminStatus(msg){const el=document.getElementById("adminStatus");if(el)el.textContent=msg}
 function adminClearForm(){
+ document.getElementById("fId").disabled=false;
  ["fId","fTitle","fYear","fGenre","fRating","fWiki","fDescription","fVideo","fTrailer"].forEach(id=>document.getElementById(id).value="");
  document.getElementById("fPoster").value="";
  document.getElementById("fNew").checked=false;document.getElementById("fPopular").checked=false;
@@ -1055,7 +1067,7 @@ async function socialAddComment(postId){
  }
  input.value="";
  await socialLoadComments(postId);
- await socialLoadFeed();
+ /* Не перерисовываем всю ленту: иначе открытый блок комментариев схлопнется. */
 }
 
 async function socialDeletePost(postId){
