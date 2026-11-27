@@ -380,6 +380,7 @@ const movies=[
 ].map(x=>({id:x[0],title:x[1],year:x[2],genre:x[3],rating:x[4],description:x[5],wiki:x[6]}));
 movies.find(m=>m.id==="aida2026").is_new=true;
 movies.find(m=>m.id==="aida2026").poster_uri="https://cdn.kanobu.ru/articles/pics/upload/images/2026/10/30/9e24f1ab-a081-45ee-9768-9f06d52fa0e1.jpg";
+movies.find(m=>m.id==="aida2026").watch_url="https://series-rezka.net/serial/kriminal/128496-ajda-2026";
 
 let genre="Все";
 let mode="catalog";
@@ -554,6 +555,9 @@ function getVideoEmbed(source){
  return null;
 }
 function createVideoPlayer(movie){
+ if(movie.watch_url){
+  return `<div class="video-placeholder"><strong>▶ Смотреть «${esc(movie.title)}»</strong><span>Откроется страница сериала на внешнем сайте.</span><a href="${esc(movie.watch_url)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:14px;padding:12px 20px;border-radius:10px;background:linear-gradient(100deg,#9333ea,#db2777);color:white;text-decoration:none;font-weight:bold">Открыть страницу сериала</a></div>`;
+ }
  const source=movie.video_url||movieStreams[movie.id]?.video_url||videoSources[movie.id];
  if(!source){
   return `<div class="video-placeholder"><strong>▶ Видео пока не добавлено</strong><span>Для этого фильма ещё не указан видеoисточник.</span><span class="video-note">Когда добавишь разрешённую ссылку на MP4, WebM, YouTube или Vimeo в videoSources, видео появится здесь.</span></div>`;
