@@ -96,6 +96,18 @@ footer{text-align:center;padding:25px;color:var(--muted)}
 .social-post textarea,.social-panel textarea{width:100%;min-height:70px;background:#24243c;color:#fff;border:1px solid #ffffff25;border-radius:10px;padding:10px}
 .social-empty{text-align:center;color:#aaaac0;padding:30px;background:#171729;border-radius:14px}
 @media(max-width:600px){.social-grid{grid-template-columns:1fr}.social-grid .wide{grid-column:auto}.social-overlay{padding:10px}}
+.social-tabs{display:flex;gap:8px;flex-wrap:wrap;position:sticky;top:0;background:#090914;padding:8px 0;z-index:4}
+.social-tabs button{flex:1;min-width:120px}
+.social-feed.recommendations{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:100%;gap:12px}
+.social-feed.recommendations .social-post{min-width:0}
+.social-feed.recommendations .social-media{aspect-ratio:4/5;max-height:420px;min-height:0;object-fit:cover}
+.social-feed.shorts{display:block;max-width:520px;height:calc(100vh - 180px);overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain}
+.social-feed.shorts .social-post{height:calc(100vh - 195px);min-height:480px;position:relative;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:flex-end;background:#000;margin-bottom:12px}
+.social-feed.shorts .social-media{position:absolute;inset:0;width:100%;height:100%;max-height:none;min-height:0;object-fit:contain}
+.social-feed.shorts .social-post-head,.social-feed.shorts .social-caption,.social-feed.shorts .social-actions{position:relative;z-index:2;background:linear-gradient(transparent,#000b);padding:12px}
+.social-feed.shorts .social-post-head{margin-top:auto}
+.social-feed.shorts .social-actions button{background:#171729dd}
+@media(max-width:600px){.social-feed.recommendations{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.social-feed.shorts{height:calc(100dvh - 185px)}.social-feed.shorts .social-post{height:calc(100dvh - 195px);min-height:420px}}
 
 </style>
 </head>
@@ -107,7 +119,10 @@ footer{text-align:center;padding:25px;color:var(--muted)}
   <button onclick="showCatalog()">Каталог</button>
   <button onclick="showFavorites()">♥ Избранное</button>
   <button onclick="showLater()">Посмотреть позже</button>
-  <button class="primary" onclick="openSocial()">🎬 Клипы</button>
+  <button onclick="openSocial('recommendations')">✨ Рекомендации</button>
+  <button onclick="openSocial('shorts')">▶ Шорты</button>
+  <button onclick="openSocial('profile')">👤 Профиль</button>
+  <button class="primary" onclick="openSocial('auth')">Войти</button>
   <button class="admin-button" onclick="openAdmin()">⚙ Админ</button>
  </div>
 </div>
@@ -175,9 +190,15 @@ footer{text-align:center;padding:25px;color:var(--muted)}
 <section id="socialOverlay" class="social-overlay" aria-label="Клипы KinoMezafilms">
  <div class="social-wrap">
   <div class="social-top">
-   <div><div class="logo">KinoMezafilms · Клипы</div><div class="social-small">Фото, короткие видео и общение</div></div>
-   <div><button onclick="closeSocial()">✕ Закрыть</button></div>
+   <div><div class="logo">KinoMezafilms · Сообщество</div><div class="social-small">Фото, видео и короткие ролики</div></div>
+   <button onclick="closeSocial()">✕ Закрыть</button>
   </div>
+  <nav class="social-tabs">
+   <button onclick="socialSetTab('recommendations')">✨ Рекомендации</button>
+   <button onclick="socialSetTab('shorts')">▶ Шорты</button>
+   <button onclick="socialSetTab('profile')">👤 Профиль</button>
+   <button onclick="socialSetTab('auth')">🔐 Авторизация</button>
+  </nav>
   <section class="social-panel" id="socialAuthPanel">
    <h2>Войти или создать аккаунт</h2>
    <p class="muted">Используй email и пароль. После регистрации подтверди email, если Supabase попросит.</p>
@@ -211,7 +232,7 @@ footer{text-align:center;padding:25px;color:var(--muted)}
    <button class="primary" onclick="socialPublish()">Опубликовать</button>
    <div id="socialPublishStatus" class="social-status"></div>
   </section>
-  <div class="social-top"><h2>Лента клипов</h2><button onclick="socialLoadFeed()">↻ Обновить</button></div>
+  <div class="social-top" id="socialFeedHeader"><h2 id="socialFeedTitle">Рекомендации</h2><button onclick="socialLoadFeed()">↻ Обновить</button></div>
   <div id="socialFeed" class="social-feed"><div class="social-empty">Войди в аккаунт или обнови ленту.</div></div>
  </div>
 </section>
@@ -754,16 +775,41 @@ function renderAdminMovieList(){
 /* KinoMezafilms Social: использует существующие profiles/social_posts/social_likes/social_comments и bucket social-media */
 let socialUser=null;
 let socialObserver=null;
+let socialCurrentTab="recommendations";
+
+function socialSetTab(tab){
+ socialCurrentTab=tab;
+ const logged=!!socialUser;
+ const auth=document.getElementById("socialAuthPanel");
+ const profile=document.getElementById("socialUserPanel");
+ const create=document.getElementById("socialCreatePanel");
+ const header=document.getElementById("socialFeedHeader");
+ const feed=document.getElementById("socialFeed");
+ const titles={recommendations:"Рекомендации",shorts:"Шорты",profile:"Мой профиль",auth:"Авторизация"};
+ document.getElementById("socialFeedTitle").textContent=titles[tab]||"Рекомендации";
+ auth.style.display=tab==="auth"?"block":"none";
+ profile.style.display=tab==="profile"&&logged?"block":"none";
+ create.style.display=tab==="profile"&&logged?"block":"none";
+ header.style.display=(tab==="recommendations"||tab==="shorts"||(tab==="profile"&&logged))?"flex":"none";
+ feed.style.display=(tab==="recommendations"||tab==="shorts"||(tab==="profile"&&logged))?"grid":"none";
+ feed.classList.toggle("recommendations",tab==="recommendations");
+ feed.classList.toggle("shorts",tab==="shorts");
+ if(tab==="profile"&&!logged){
+  auth.style.display="block";
+  socialStatus("socialAuthStatus","Чтобы открыть профиль, сначала войди или зарегистрируйся.");
+ }
+ if(tab==="recommendations"||tab==="shorts"||(tab==="profile"&&logged))socialLoadFeed();
+}
 
 function socialStatus(id,message){
  const el=document.getElementById(id);
  if(el)el.textContent=message||"";
 }
 
-function openSocial(){
+function openSocial(tab="recommendations"){
  document.getElementById("socialOverlay").classList.add("open");
  document.body.style.overflow="hidden";
- socialRefresh();
+ socialRefresh().then(()=>socialSetTab(tab));
 }
 
 function closeSocial(){
@@ -781,20 +827,14 @@ async function socialRefresh(){
  const {data}=await sb.auth.getSession();
  socialUser=data?.session?.user||null;
  socialUpdatePanels();
- if(socialUser){
-  await socialLoadProfile();
-  await socialLoadFeed();
- }else{
-  document.getElementById("socialFeed").innerHTML='<div class="social-empty">Войди, чтобы публиковать фото и видео, ставить лайки и писать комментарии.</div>';
- }
+ if(socialUser)await socialLoadProfile();
+ socialSetTab(socialCurrentTab);
 }
 
 function socialUpdatePanels(){
  const logged=!!socialUser;
- document.getElementById("socialAuthPanel").style.display=logged?"none":"block";
- document.getElementById("socialUserPanel").style.display=logged?"block":"none";
- document.getElementById("socialCreatePanel").style.display=logged?"block":"none";
  if(logged)document.getElementById("socialWelcome").textContent="Аккаунт: "+socialUser.email;
+ socialSetTab(socialCurrentTab);
 }
 
 async function socialSignUp(){
@@ -947,13 +987,16 @@ async function socialLoadFeed(){
   return;
  }
  feed.innerHTML='<div class="social-empty">Загружаю публикации...</div>';
- const {data:posts,error}=await sb.from("social_posts").select("id,user_id,media_type,media_url,caption,created_at").order("created_at",{ascending:false}).limit(40);
+ let postQuery=sb.from("social_posts").select("id,user_id,media_type,media_url,caption,created_at");
+ if(socialCurrentTab==="shorts")postQuery=postQuery.eq("media_type","video");
+ if(socialCurrentTab==="profile"&&socialUser)postQuery=postQuery.eq("user_id",socialUser.id);
+ const {data:posts,error}=await postQuery.order("created_at",{ascending:false}).limit(40);
  if(error){
   feed.innerHTML='<div class="social-empty">Ошибка ленты: '+esc(error.message)+'</div>';
   return;
  }
  if(!posts?.length){
-  feed.innerHTML='<div class="social-empty">Пока нет публикаций. Стань первым — добавь фото или видео!</div>';
+  feed.innerHTML='<div class="social-empty">'+(socialCurrentTab==="shorts"?"Пока нет шортов. Загрузи первое короткое видео в профиле!":"Пока нет публикаций. Стань первым — добавь фото или видео!")+'</div>';
   return;
  }
  const ids=[...new Set(posts.map(p=>p.user_id))];
