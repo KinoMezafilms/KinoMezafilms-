@@ -568,7 +568,11 @@ function createVideoPlayer(movie){
  }
  const media=getVideoEmbed(source);
  if(!media){
-  return `<div class="video-placeholder"><strong>Не удалось открыть видео</strong><span>Проверь HTTPS-ссылку и поддерживаемый формат.</span></div>`;
+  const externalUrl=safeVideoUrl(source);
+  if(externalUrl){
+   return `<div class="video-placeholder"><strong>▶ Фильм «${esc(movie.title)}» готов к просмотру</strong><span>Фильм откроется на внешнем сайте в новой вкладке.</span><a href="${esc(externalUrl.href)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:14px;padding:12px 20px;border-radius:10px;background:linear-gradient(100deg,#9333ea,#db2777);color:white;text-decoration:none;font-weight:bold">Смотреть фильм</a></div>`;
+  }
+  return `<div class="video-placeholder"><strong>Не удалось открыть видео</strong><span>Укажи корректную HTTPS-ссылку на страницу фильма или видеопоток.</span></div>`;
  }
  if(media.type==="iframe"){
   return `<div class="video-frame"><iframe src="${esc(media.src)}" title="Плеер: ${esc(movie.title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`;
