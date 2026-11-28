@@ -127,7 +127,7 @@ footer{text-align:center;padding:25px;color:var(--muted)}
   <button onclick="openSocial('recommendations')">✨ Рекомендации</button>
   <button onclick="openSocial('shorts')">▶ Шорты</button>
   <button onclick="openSocial('profile')">👤 Профиль</button>
-  <button class="primary" onclick="openSocial('auth')">Войти</button>
+  <button id="mainLoginButton" class="primary" onclick="openSocial('auth')">Войти</button>
   <button class="primary" onclick="window.open('https://mezalebyy.donatik.ua/subs','_blank','noopener')">⭐ Premium · $0.11/мес.</button>
   <button class="admin-button" onclick="openAdmin()">⚙ Админ</button>
  </div>
@@ -882,6 +882,8 @@ function socialUpdatePanels(){
  const logged=!!socialUser;
  const authButton=document.getElementById("socialAuthNavButton");
  if(authButton)authButton.style.display=logged?"none":"";
+ const mainLoginButton=document.getElementById("mainLoginButton");
+ if(mainLoginButton)mainLoginButton.style.display=logged?"none":"";
  if(logged&&socialCurrentTab==="auth")socialCurrentTab="recommendations";
  if(logged)document.getElementById("socialWelcome").textContent="Аккаунт: "+socialUser.email;
  socialSetTab(socialCurrentTab);
