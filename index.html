@@ -393,6 +393,52 @@ footer{padding:42px 20px;color:#8d96ac}
 }
 @media(prefers-reduced-motion:reduce){.movie{transition:none}}
 
+
+/* Full-site tropical night background */
+html{min-height:100%;background:#070b1b}
+body{
+ min-height:100vh;
+ background:
+  radial-gradient(ellipse at 12% 18%,rgba(255,93,83,.20),transparent 34%),
+  radial-gradient(ellipse at 88% 22%,rgba(36,105,210,.24),transparent 38%),
+  radial-gradient(ellipse at 50% 78%,rgba(0,160,190,.17),transparent 45%),
+  linear-gradient(180deg,#070b1b 0%,#11152d 34%,#101b32 68%,#080d1c 100%);
+ background-attachment:fixed;
+}
+body::before{
+ content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.9;
+ background:
+  radial-gradient(ellipse at 4% 35%,rgba(255,86,76,.18),transparent 28%),
+  radial-gradient(ellipse at 96% 38%,rgba(255,174,65,.14),transparent 27%),
+  radial-gradient(ellipse at 50% 100%,rgba(0,151,190,.22),transparent 45%),
+  radial-gradient(ellipse at 78% 68%,rgba(29,69,132,.18),transparent 33%),
+  radial-gradient(circle at 8% 12%,#fff 0 1px,transparent 1.7px),
+  radial-gradient(circle at 24% 28%,#fff 0 1px,transparent 1.8px),
+  radial-gradient(circle at 43% 9%,#fff 0 1px,transparent 1.8px),
+  radial-gradient(circle at 62% 19%,#fff 0 1px,transparent 1.8px),
+  radial-gradient(circle at 82% 11%,#fff 0 1px,transparent 1.8px),
+  radial-gradient(circle at 94% 27%,#fff 0 1px,transparent 1.8px),
+  linear-gradient(160deg,transparent 0 53%,rgba(9,20,47,.65) 53.3% 59%,transparent 59.3%),
+  linear-gradient(25deg,transparent 0 58%,rgba(10,24,52,.72) 58.3% 65%,transparent 65.3%),
+  linear-gradient(180deg,transparent 0 64%,rgba(4,35,62,.7) 64.5%,rgba(3,14,31,.88) 100%);
+ background-size:100% 100%;
+}
+body::after{
+ content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.13;
+ background-image:radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.8px),radial-gradient(circle,rgba(255,255,255,.5) 1px,transparent 1.8px);
+ background-size:47px 53px,71px 67px;background-position:8px 11px,31px 27px;
+}
+header{background:rgba(5,9,25,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.13)}
+.movie,.modal-box,.admin-panel,.social-panel,.social-post,.social-empty,.empty{
+ background:rgba(10,16,34,.78)!important;
+ border-color:rgba(255,255,255,.13)!important;
+ backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+ box-shadow:0 12px 38px rgba(0,0,0,.20);
+}
+.section h2,.section{ text-shadow:0 2px 14px rgba(0,0,0,.45)}
+input,select{background:rgba(8,13,29,.88)}
+@media(prefers-reduced-motion:no-preference){body{background-size:100% 100%;}}
+
 </style>
 </head>
 <body>
