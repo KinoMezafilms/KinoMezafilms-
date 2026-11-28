@@ -115,6 +115,98 @@ footer{text-align:center;padding:25px;color:var(--muted)}
 .chat-time{font-size:11px;color:#c5b6d7;margin-top:4px}
 .friend-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #ffffff18;flex-wrap:wrap}
 
+
+/* KinoMezafilms — яркий фон с художественными цветными брызгами */
+html{background:#090914}
+body{
+ position:relative;
+ isolation:isolate;
+ background-color:#090914;
+ background-image:
+  radial-gradient(ellipse at 7% 18%,rgba(239,45,62,.20),transparent 27%),
+  radial-gradient(ellipse at 92% 28%,rgba(255,190,35,.16),transparent 25%),
+  radial-gradient(ellipse at 78% 82%,rgba(35,105,255,.22),transparent 30%),
+  radial-gradient(ellipse at 18% 88%,rgba(239,45,62,.12),transparent 26%);
+ background-attachment:fixed;
+}
+body::before{
+ content:"";
+ position:fixed;
+ inset:0;
+ z-index:-1;
+ pointer-events:none;
+ opacity:.72;
+ background:
+  radial-gradient(circle at 5% 19%,#f04452 0 2px,transparent 3px),
+  radial-gradient(circle at 8% 24%,#ff394d 0 5px,transparent 6px),
+  radial-gradient(circle at 11% 15%,#e52d45 0 3px,transparent 4px),
+  radial-gradient(circle at 15% 28%,#f04452 0 2px,transparent 3px),
+  radial-gradient(circle at 3% 32%,#ff5361 0 2px,transparent 3px),
+  radial-gradient(circle at 92% 17%,#ffd34d 0 5px,transparent 6px),
+  radial-gradient(circle at 96% 23%,#ffbd27 0 2px,transparent 3px),
+  radial-gradient(circle at 88% 29%,#ffe16a 0 3px,transparent 4px),
+  radial-gradient(circle at 98% 34%,#ffbf35 0 2px,transparent 3px),
+  radial-gradient(circle at 83% 13%,#ffd34d 0 2px,transparent 3px),
+  radial-gradient(circle at 91% 82%,#3478ff 0 5px,transparent 6px),
+  radial-gradient(circle at 96% 76%,#2464e8 0 2px,transparent 3px),
+  radial-gradient(circle at 85% 88%,#438cff 0 3px,transparent 4px),
+  radial-gradient(circle at 78% 79%,#3478ff 0 2px,transparent 3px),
+  radial-gradient(circle at 7% 83%,#f04452 0 4px,transparent 5px),
+  radial-gradient(circle at 12% 91%,#ff394d 0 2px,transparent 3px),
+  radial-gradient(circle at 17% 78%,#e52d45 0 3px,transparent 4px);
+ filter:drop-shadow(0 0 16px rgba(255,255,255,.10));
+}
+body::after{
+ content:"";
+ position:fixed;
+ inset:0;
+ z-index:-1;
+ pointer-events:none;
+ opacity:.22;
+ background-image:
+  radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.8px),
+  radial-gradient(circle,rgba(255,255,255,.55) 1px,transparent 1.8px);
+ background-size:47px 53px,71px 67px;
+ background-position:8px 11px,31px 27px;
+ mask-image:linear-gradient(90deg,#000,transparent 34%,transparent 66%,#000);
+}
+header{
+ background:rgba(9,9,20,.78);
+ backdrop-filter:blur(16px);
+ -webkit-backdrop-filter:blur(16px);
+ border-bottom:1px solid rgba(255,255,255,.10);
+}
+.hero{
+ position:relative;
+ overflow:hidden;
+ border:1px solid rgba(255,255,255,.12);
+ background:
+  radial-gradient(ellipse at 0% 100%,rgba(239,45,62,.24),transparent 48%),
+  radial-gradient(ellipse at 100% 0%,rgba(255,190,35,.18),transparent 45%),
+  linear-gradient(120deg,rgba(40,19,66,.94),rgba(26,32,68,.92));
+ box-shadow:0 18px 55px rgba(0,0,0,.24);
+}
+.movie,.modal-box,.admin-panel,.social-panel,.social-post,.social-empty{
+ background:rgba(23,23,41,.88);
+ backdrop-filter:blur(10px);
+ -webkit-backdrop-filter:blur(10px);
+ border-color:rgba(255,255,255,.12);
+}
+.movie:hover{
+ border-color:rgba(255,190,35,.65);
+ box-shadow:0 10px 28px rgba(35,105,255,.12),0 6px 20px rgba(239,45,62,.10);
+}
+.section h2{ text-shadow:0 2px 18px rgba(255,255,255,.12) }
+.logo{
+ background:linear-gradient(90deg,#ff5b62,#ffd34d 48%,#5790ff);
+ -webkit-background-clip:text;
+ background-clip:text;
+ color:transparent;
+}
+button{transition:transform .18s ease,border-color .18s ease,filter .18s ease}
+button:hover{transform:translateY(-1px);filter:brightness(1.12)}
+@media(prefers-reduced-motion:reduce){button{transition:none}}
+
 </style>
 </head>
 <body>
