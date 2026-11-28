@@ -207,6 +207,188 @@ button{transition:transform .18s ease,border-color .18s ease,filter .18s ease}
 button:hover{transform:translateY(-1px);filter:brightness(1.12)}
 @media(prefers-reduced-motion:reduce){button{transition:none}}
 
+
+/* CINEMA PREMIERE — выразительная витрина KinoMezafilms */
+:root{
+ --bg:#080912;
+ --panel:#111522;
+ --panel2:#20283a;
+ --accent:#ff4b5f;
+}
+body{
+ background-color:#080912;
+ background-image:
+  radial-gradient(ellipse at 50% -12%,rgba(255,70,86,.22),transparent 38%),
+  radial-gradient(ellipse at 100% 36%,rgba(255,190,48,.12),transparent 29%),
+  radial-gradient(ellipse at 0% 68%,rgba(43,105,255,.16),transparent 32%),
+  linear-gradient(180deg,#090b17 0%,#0b0e19 48%,#080912 100%);
+}
+body::before{opacity:.42;filter:blur(.25px)}
+body::after{opacity:.12}
+header{
+ background:rgba(7,9,19,.76);
+ border-bottom:1px solid rgba(255,255,255,.09);
+ box-shadow:0 12px 35px rgba(0,0,0,.18);
+}
+.header{max-width:1320px}
+.logo{
+ font-size:clamp(22px,3vw,29px);
+ letter-spacing:-1.2px;
+ text-shadow:0 0 28px rgba(255,76,96,.18);
+}
+header .header>div:last-child{
+ display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap
+}
+header button{
+ background:rgba(255,255,255,.045);
+ border-color:rgba(255,255,255,.10);
+ border-radius:999px;
+ padding:10px 13px;
+ font-size:13px;
+}
+header button.primary{
+ background:linear-gradient(110deg,#ff4b5f,#ff9d42);
+ color:#fff;
+ box-shadow:0 5px 22px rgba(255,75,95,.2);
+}
+main{max-width:1320px;padding:28px 18px}
+.hero{
+ min-height:390px;
+ display:flex;
+ flex-direction:column;
+ align-items:flex-start;
+ justify-content:center;
+ padding:clamp(30px,6vw,76px);
+ border-radius:28px;
+ isolation:isolate;
+ background:
+  linear-gradient(90deg,rgba(7,9,19,.97) 0%,rgba(10,12,24,.88) 42%,rgba(10,12,24,.24) 100%),
+  radial-gradient(ellipse at 78% 42%,rgba(255,177,48,.28),transparent 22%),
+  radial-gradient(ellipse at 86% 68%,rgba(255,57,80,.35),transparent 28%),
+  radial-gradient(ellipse at 70% 18%,rgba(47,112,255,.30),transparent 28%),
+  linear-gradient(125deg,#17172d,#22203b 55%,#101827);
+ border:1px solid rgba(255,255,255,.15);
+ box-shadow:0 28px 80px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.08);
+ overflow:hidden;
+}
+.hero::before{
+ content:"";
+ position:absolute;
+ z-index:-1;
+ width:min(42vw,500px);height:min(42vw,500px);
+ right:7%;top:50%;
+ transform:translateY(-50%) rotate(-16deg);
+ border-radius:42% 58% 63% 37% / 43% 38% 62% 57%;
+ background:
+  radial-gradient(circle at 35% 28%,rgba(255,255,255,.9) 0 1px,transparent 2px),
+  radial-gradient(ellipse at 35% 28%,rgba(255,197,76,.88),transparent 23%),
+  radial-gradient(ellipse at 68% 42%,rgba(255,63,85,.92),transparent 34%),
+  radial-gradient(ellipse at 38% 72%,rgba(42,111,255,.94),transparent 37%),
+  conic-gradient(from 35deg,rgba(255,65,85,.8),rgba(255,190,50,.55),rgba(44,110,255,.8),rgba(255,65,85,.8));
+ filter:blur(1px) saturate(1.25);
+ opacity:.78;
+ box-shadow:0 0 100px rgba(255,74,90,.15);
+}
+.hero::after{
+ content:"";
+ position:absolute;
+ z-index:-1;
+ right:15%;top:13%;
+ width:260px;height:260px;
+ border:1px solid rgba(255,255,255,.18);
+ border-radius:50%;
+ box-shadow:0 0 0 24px rgba(255,255,255,.025),0 0 0 52px rgba(255,255,255,.02),0 0 70px rgba(65,120,255,.14);
+}
+.hero h1{
+ max-width:720px;
+ font-size:clamp(38px,6.2vw,76px);
+ line-height:.99;
+ letter-spacing:-2.8px;
+ text-wrap:balance;
+ margin:0 0 20px;
+ background:linear-gradient(100deg,#fff 10%,#ffe5c0 58%,#ff8992 100%);
+ -webkit-background-clip:text;background-clip:text;color:transparent;
+ filter:drop-shadow(0 5px 22px rgba(0,0,0,.25));
+}
+.hero p{
+ max-width:520px;
+ font-size:clamp(15px,1.7vw,19px);
+ color:#d8dbea;
+ line-height:1.65;
+ margin:0 0 25px;
+}
+.hero button{
+ border-radius:999px;
+ padding:13px 20px;
+ margin:4px 7px 4px 0;
+ background:rgba(255,255,255,.09);
+ border:1px solid rgba(255,255,255,.20);
+ backdrop-filter:blur(8px);
+}
+.hero button.primary{
+ background:linear-gradient(105deg,#ff435f,#ff9b3d);
+ border:0;
+ box-shadow:0 9px 28px rgba(255,70,92,.28);
+ font-weight:700;
+}
+.section{
+ margin:30px 2px 16px;
+ align-items:flex-end;
+}
+.section h2{
+ font-size:clamp(22px,3vw,30px);
+ letter-spacing:-.7px;
+ margin:0;
+}
+#count{font-size:13px}
+.catalog{gap:19px}
+.movie{
+ background:linear-gradient(160deg,rgba(24,29,47,.96),rgba(13,17,29,.96));
+ border:1px solid rgba(255,255,255,.10);
+ border-radius:17px;
+ box-shadow:0 12px 28px rgba(0,0,0,.20);
+ transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
+}
+.movie:hover{
+ transform:translateY(-6px) scale(1.012);
+ border-color:rgba(255,165,75,.62);
+ box-shadow:0 20px 42px rgba(0,0,0,.38),0 0 28px rgba(255,75,95,.10);
+}
+.poster{background:linear-gradient(145deg,#24233e,#121a2a)}
+.poster::after{
+ content:"";
+ position:absolute;inset:48% 0 0;
+ background:linear-gradient(transparent,rgba(4,6,14,.20));
+ pointer-events:none;
+}
+.info{padding:13px}
+.title{font-size:14px;letter-spacing:.1px}
+.meta{color:#aeb8ce}
+.actions button{border-radius:999px}
+.primary{background:linear-gradient(105deg,#ff435f,#ff9b3d)}
+.filter.active{background:linear-gradient(105deg,#e83d63,#a34ee8);border-color:transparent}
+input,select{
+ background:rgba(18,23,38,.92);
+ border-color:rgba(255,255,255,.13);
+}
+.modal-box{
+ background:rgba(15,19,32,.97);
+ border-color:rgba(255,255,255,.14);
+ box-shadow:0 28px 90px rgba(0,0,0,.55);
+}
+footer{padding:42px 20px;color:#8d96ac}
+@media(max-width:700px){
+ main{padding:16px 11px}
+ .hero{min-height:340px;padding:28px 22px;border-radius:22px}
+ .hero::before{width:290px;height:290px;right:-105px;top:65%;opacity:.45}
+ .hero::after{right:-75px;top:9%;width:190px;height:190px}
+ .hero h1{font-size:clamp(38px,11vw,58px);letter-spacing:-1.8px}
+ header .header>div:last-child{justify-content:center}
+ header button{font-size:12px;padding:9px 11px}
+ .catalog{gap:11px}
+}
+@media(prefers-reduced-motion:reduce){.movie{transition:none}}
+
 </style>
 </head>
 <body>
