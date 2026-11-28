@@ -212,6 +212,7 @@ footer{text-align:center;padding:25px;color:var(--muted)}
    <h2>Войти или создать аккаунт</h2>
    <p class="muted">Используй email и пароль. После регистрации подтверди email, если Supabase попросит.</p>
    <div class="social-grid">
+    <input id="socialUsernameSignup" type="text" placeholder="Придумай уникальный никнейм (3–20 символов)" maxlength="20" autocomplete="username">
     <input id="socialEmail" type="email" placeholder="Email">
     <input id="socialPassword" type="password" placeholder="Пароль (не менее 6 символов)">
     <button class="primary" onclick="socialSignIn()">Войти</button>
@@ -885,14 +886,23 @@ function socialUpdatePanels(){
 
 async function socialSignUp(){
  if(!sb)return;
+ const username=document.getElementById("socialUsernameSignup").value.trim();
  const email=document.getElementById("socialEmail").value.trim();
  const password=document.getElementById("socialPassword").value;
+ if(!/^[a-zA-Z0-9_]{3,20}$/.test(username)){
+  socialStatus("socialAuthStatus","Никнейм: 3–20 символов, только латинские буквы, цифры и _."); 
+  return;
+ }
  if(!email||password.length<6){
   socialStatus("socialAuthStatus","Введи email и пароль минимум из 6 символов.");
   return;
  }
  socialStatus("socialAuthStatus","Создаю аккаунт...");
- const {data,error}=await sb.auth.signUp({email,password});
+ const {data,error}=await sb.auth.signUp({
+  email,
+  password,
+  options:{data:{username}}
+ });
  if(error){
   socialStatus("socialAuthStatus","Ошибка регистрации: "+error.message);
   return;
@@ -942,7 +952,7 @@ async function socialEnsureProfile(){
   return;
  }
  if(!data){
-  const username=(socialUser.email||"user").split("@")[0].replace(/[^a-zA-Z0-9_]/g,"").slice(0,20)||"user";
+  const username=(socialUser.user_metadata?.username||(socialUser.email||"user").split("@")[0].replace(/[^a-zA-Z0-9_]/g,"").slice(0,20)||"user").trim();
   const ins=await sb.from("profiles").insert({user_id:socialUser.id,username,display_name:username});
   if(ins.error)socialStatus("socialProfileStatus","Не удалось создать профиль: "+ins.error.message);
  }
