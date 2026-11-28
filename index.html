@@ -894,7 +894,7 @@ function socialUpdatePanels(){
  const mainLoginButton=document.getElementById("mainLoginButton");
  if(mainLoginButton)mainLoginButton.textContent=logged?"Выйти":"Войти";
  if(logged&&socialCurrentTab==="auth")socialCurrentTab="recommendations";
- if(logged)document.getElementById("socialWelcome").textContent="Аккаунт: "+socialUser.email;
+ if(logged)document.getElementById("socialWelcome").textContent="Аккаунт";
  socialSetTab(socialCurrentTab);
 }
 
@@ -981,6 +981,8 @@ async function socialLoadProfile(){
   return;
  }
  if(data){
+  const accountLabel=document.getElementById("socialWelcome");
+  if(accountLabel)accountLabel.textContent="Аккаунт: "+(data.display_name||data.username||socialUser.email||"Пользователь");
   document.getElementById("socialUsername").value=data.username||"";
   document.getElementById("socialDisplayName").value=data.display_name||"";
   document.getElementById("socialAvatar").value=data.avatar_url||"";
