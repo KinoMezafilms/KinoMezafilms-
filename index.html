@@ -16,6 +16,7 @@ button,input,select{font:inherit}
 button{cursor:pointer;border:1px solid #ffffff20;border-radius:10px;padding:10px 14px;background:var(--panel2);color:white}
 button:hover{border-color:#c084fc}
 .primary{background:linear-gradient(100deg,#9333ea,#db2777);border:0}
+.premium-active,.premium-active:hover{background:#555568!important;color:#e4e4eb!important;border:1px solid #777789!important;cursor:default;opacity:1}
 main{max-width:1200px;margin:auto;padding:20px 14px}
 .hero{padding:35px 25px;border-radius:20px;background:linear-gradient(120deg,#281342,#48204f);margin-bottom:28px}
 .hero h1{font-size:clamp(30px,6vw,48px);margin:0 0 12px}
@@ -128,7 +129,7 @@ footer{text-align:center;padding:25px;color:var(--muted)}
   <button onclick="openSocial('shorts')">▶ Шорты</button>
   <button onclick="openSocial('profile')">👤 Профиль</button>
   <button id="mainLoginButton" class="primary" onclick="socialMainAuthAction()">Войти</button>
-  <button class="primary" onclick="window.open('https://mezalebyy.donatik.ua/subs','_blank','noopener')">⭐ Premium · $0.11/мес.</button>
+  <button id="premiumNavButton" class="primary" onclick="window.open('https://mezalebyy.donatik.ua/subs','_blank','noopener')">⭐ Premium · $0.11/мес.</button>
   <button class="admin-button" onclick="openAdmin()">⚙ Админ</button>
  </div>
 </div>
@@ -138,7 +139,7 @@ footer{text-align:center;padding:25px;color:var(--muted)}
  <h1>Твой мир кино</h1>
  <p>Выбирай фильмы, открывай новые истории и собирай собственную коллекцию.</p>
  <button class="primary" onclick="showCatalog()">Открыть каталог</button>
- <button onclick="window.open('https://mezalebyy.donatik.ua/subs','_blank','noopener')">⭐ Premium за $0.11/мес.</button>
+ <button id="premiumHeroButton" onclick="window.open('https://mezalebyy.donatik.ua/subs','_blank','noopener')">⭐ Premium за $0.11/мес.</button>
  <button onclick="randomMovie()">Случайный фильм</button>
 </section>
 <div class="section">
@@ -900,6 +901,27 @@ function socialSetTab(tab){
  if(tab==="recommendations"||tab==="shorts"||(tab==="profile"&&logged))socialLoadFeed();
 }
 
+async function refreshPremiumButtons(){
+ const buttons=[document.getElementById("premiumNavButton"),document.getElementById("premiumHeroButton")].filter(Boolean);
+ if(!buttons.length)return;
+ let active=false;
+ if(sb){
+  const {data:sessionData}=await sb.auth.getSession();
+  const user=sessionData?.session?.user;
+  if(user){
+   const {data:access,error}=await sb.from("premium_access").select("status,ends_at").eq("user_id",user.id).maybeSingle();
+   active=!error&&!!access&&String(access.status||"").toUpperCase()==="ACTIVE"&&(!access.ends_at||new Date(access.ends_at).getTime()>Date.now());
+  }
+ }
+ buttons.forEach(button=>{
+  button.classList.toggle("premium-active",active);
+  button.disabled=active;
+  button.textContent=active?"✓ ПРЕМИУМ АКТИВЕН":"⭐ Premium · $0.11/мес.";
+  button.onclick=active?null:()=>window.open("https://mezalebyy.donatik.ua/subs","_blank","noopener");
+  button.setAttribute("aria-label",active?"Premium активен":"Оформить Premium");
+ });
+}
+
 function socialMainAuthAction(){
  if(socialUser){
   socialSignOut();
@@ -1330,10 +1352,12 @@ if(sb){
  sb.auth.getSession().then(({data})=>{
   socialUser=data?.session?.user||null;
   socialSyncMainAuthButton();
+  refreshPremiumButtons();
  });
  sb.auth.onAuthStateChange((_event,session)=>{
   socialUser=session?.user||null;
   socialSyncMainAuthButton();
+  refreshPremiumButtons();
   if(document.getElementById("socialOverlay")?.classList.contains("open")){
    socialUpdatePanels();
    if(socialUser){
