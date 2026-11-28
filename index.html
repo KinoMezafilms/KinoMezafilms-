@@ -226,6 +226,7 @@ footer{text-align:center;padding:25px;color:var(--muted)}
     <input id="socialUsername" placeholder="Имя пользователя">
     <input id="socialDisplayName" placeholder="Отображаемое имя">
     <input id="socialAvatar" class="wide" placeholder="Ссылка на аватар (необязательно)">
+    <input id="socialDonatikUsername" class="wide" placeholder="Никнейм Donatik (для Premium)">
     <textarea id="socialBio" class="wide" placeholder="О себе"></textarea>
     <button class="primary wide" onclick="socialSaveProfile()">Сохранить профиль</button>
    </div>
@@ -974,7 +975,7 @@ async function socialEnsureProfile(){
 async function socialLoadProfile(){
  if(!socialUser)return;
  await socialEnsureProfile();
- const {data,error}=await sb.from("profiles").select("username,display_name,avatar_url,bio").eq("user_id",socialUser.id).maybeSingle();
+ const {data,error}=await sb.from("profiles").select("username,display_name,avatar_url,bio,donatik_username").eq("user_id",socialUser.id).maybeSingle();
  if(error){
   socialStatus("socialProfileStatus","Ошибка загрузки профиля: "+error.message);
   return;
@@ -983,6 +984,7 @@ async function socialLoadProfile(){
   document.getElementById("socialUsername").value=data.username||"";
   document.getElementById("socialDisplayName").value=data.display_name||"";
   document.getElementById("socialAvatar").value=data.avatar_url||"";
+  document.getElementById("socialDonatikUsername").value=data.donatik_username||"";
   document.getElementById("socialBio").value=data.bio||"";
  }
 }
@@ -999,6 +1001,7 @@ async function socialSaveProfile(){
   username,
   display_name:document.getElementById("socialDisplayName").value.trim()||username,
   avatar_url:document.getElementById("socialAvatar").value.trim()||null,
+  donatik_username:document.getElementById("socialDonatikUsername").value.trim()||null,
   bio:document.getElementById("socialBio").value.trim()
  };
  const {error}=await sb.from("profiles").upsert(row,{onConflict:"user_id"});
