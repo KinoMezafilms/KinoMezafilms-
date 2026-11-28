@@ -1268,9 +1268,19 @@ async function socialSendMessage(){
  input.value="";socialStatus("chatStatus","");await socialOpenChat(socialChatFriend);
 }
 
+function socialSyncMainAuthButton(){
+ const button=document.getElementById("mainLoginButton");
+ if(button)button.textContent=socialUser?"Выйти":"Войти";
+}
+
 if(sb){
+ sb.auth.getSession().then(({data})=>{
+  socialUser=data?.session?.user||null;
+  socialSyncMainAuthButton();
+ });
  sb.auth.onAuthStateChange((_event,session)=>{
   socialUser=session?.user||null;
+  socialSyncMainAuthButton();
   if(document.getElementById("socialOverlay")?.classList.contains("open")){
    socialUpdatePanels();
    if(socialUser){
