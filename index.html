@@ -204,7 +204,7 @@ footer{text-align:center;padding:25px;color:var(--muted)}
    <button onclick="socialSetTab('recommendations')">✨ Рекомендации</button>
    <button onclick="socialSetTab('shorts')">▶ Шорты</button>
    <button onclick="socialSetTab('profile')">👤 Профиль</button>
-   <button onclick="socialSetTab('auth')">🔐 Авторизация</button>
+   <button id="socialAuthNavButton" onclick="socialSetTab('auth')">🔐 Авторизация</button>
    <button onclick="socialSetTab('friends')">👥 Друзья</button>
    <button onclick="socialSetTab('messages')">💬 Сообщения</button>
   </nav>
@@ -830,7 +830,7 @@ function socialSetTab(tab){
  const messages=document.getElementById("socialMessagesPanel");
  const titles={recommendations:"Рекомендации",shorts:"Шорты",profile:"Мой профиль",auth:"Авторизация",friends:"Друзья",messages:"Сообщения"};
  document.getElementById("socialFeedTitle").textContent=titles[tab]||"Рекомендации";
- auth.style.display=tab==="auth"?"block":"none";
+ auth.style.display=tab==="auth"&&!logged?"block":"none";
  friends.style.display=tab==="friends"&&logged?"block":"none";
  messages.style.display=tab==="messages"&&logged?"block":"none";
  if(tab==="friends"&&logged)socialLoadFriends();
@@ -880,6 +880,9 @@ async function socialRefresh(){
 
 function socialUpdatePanels(){
  const logged=!!socialUser;
+ const authButton=document.getElementById("socialAuthNavButton");
+ if(authButton)authButton.style.display=logged?"none":"";
+ if(logged&&socialCurrentTab==="auth")socialCurrentTab="recommendations";
  if(logged)document.getElementById("socialWelcome").textContent="Аккаунт: "+socialUser.email;
  socialSetTab(socialCurrentTab);
 }
