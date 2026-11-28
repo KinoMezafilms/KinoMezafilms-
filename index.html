@@ -629,10 +629,61 @@ function render(){
  catalog.querySelectorAll(".movie").forEach((card,i)=>loadPoster(list[i],card.querySelector(".poster")));
 }
 function randomMovie(){const movie=movies[Math.floor(Math.random()*movies.length)];openMovie(movie.id)}
-function openMovie(id){
+async function openMovie(id){
  const m=movies.find(x=>x.id===id);
  if(!m)return;
- document.getElementById("details").innerHTML=`
+ const details=document.getElementById("details");
+ const modal=document.getElementById("modal");
+ details.innerHTML='<div class="video-placeholder"><strong>Проверяем доступ...</strong><span>Подожди немного.</span></div>';
+ modal.classList.add("show");
+
+ if(!sb){
+  details.innerHTML='<h2>'+esc(m.title)+'</h2><div class="video-placeholder"><strong>Не удалось проверить Premium</strong><span>Подключение к аккаунту временно недоступно. Попробуй обновить страницу.</span></div>';
+  return;
+ }
+
+ const {data:sessionData,error:sessionError}=await sb.auth.getSession();
+ const user=sessionData?.session?.user;
+ if(sessionError||!user){
+  details.innerHTML=`
+   <h2>${esc(m.title)}</h2>
+   <div class="video-placeholder">
+    <strong>🔒 Для просмотра нужен аккаунт и Premium</strong>
+    <span>Войди или зарегистрируйся, затем оформи подписку.</span>
+    <button class="primary" style="margin-top:14px" onclick="closeModal();openSocial('auth')">Войти / зарегистрироваться</button>
+   </div>`;
+  return;
+ }
+
+ const {data:access,error:accessError}=await sb
+  .from("premium_access")
+  .select("status,ends_at")
+  .eq("user_id",user.id)
+  .maybeSingle();
+
+ const premiumActive=!accessError&&access&&String(access.status||"").toUpperCase()==="ACTIVE"&&
+  (!access.ends_at||new Date(access.ends_at).getTime()>Date.now());
+
+ if(!premiumActive){
+  details.innerHTML=`
+   <h2>${esc(m.title)}</h2>
+   <div class="video-placeholder">
+    <strong>⭐ Этот фильм доступен по Premium</strong>
+    <span>Оформи ежемесячную подписку, чтобы открыть просмотр фильма.</span>
+    <button class="primary" style="margin-top:14px" onclick="window.open('https://mezalebyy.donatik.ua/subs','_blank','noopener')">Оформить Premium</button>
+    <span class="video-note">После подтверждения оплаты вернись на сайт и обнови страницу. Доступ откроется, когда Premium будет активирован.</span>
+   </div>`;
+  return;
+ }
+
+ const {data:stream,error:streamError}=await sb
+  .from("movie_streams")
+  .select("movie_id,video_url,trailer_url")
+  .eq("movie_id",m.id)
+  .maybeSingle();
+ if(!streamError&&stream)movieStreams[m.id]=stream;
+
+ details.innerHTML=`
   <h2>${esc(m.title)}</h2>
   <div class="detail">
    <div class="poster" id="detailPoster"><div class="poster-fallback">${esc(m.title)}</div><img alt="Постер ${esc(m.title)}"></div>
@@ -649,7 +700,6 @@ function openMovie(id){
    ${createVideoPlayer(m)}
   </section>
  `;
- document.getElementById("modal").classList.add("show");
  loadPoster(m,document.getElementById("detailPoster"));
 }
 function closeModal(){
@@ -692,14 +742,11 @@ async function loadFromSupabase(){
   return;
  }
  try{
-  const [m,s]=await Promise.all([
-   sb.from("movies").select("*").order("title"),
-   sb.from("movie_streams").select("movie_id,video_url,trailer_url")
-  ]);
+  const m=await sb.from("movies").select("*").order("title");
   if(m.error)throw m.error;
-  if(s.error)throw s.error;
+  /* Ссылки на просмотр больше не загружаются всем посетителям каталога.
+     Отдельную ссылку запрашиваем только после проверки Premium в openMovie(). */
   movieStreams={};
-  (s.data||[]).forEach(row=>movieStreams[row.movie_id]=row);
   /* Не заменяем локальный каталог данными базы: объединяем записи по ID.
      Поэтому фильмы из стартового каталога не исчезнут, если в Supabase загружена лишь часть. */
   if(m.data&&m.data.length){
