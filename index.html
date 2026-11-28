@@ -18,9 +18,13 @@ button:hover{border-color:#c084fc}
 .primary{background:linear-gradient(100deg,#9333ea,#db2777);border:0}
 .premium-active,.premium-active:hover{background:#555568!important;color:#e4e4eb!important;border:1px solid #777789!important;cursor:default;opacity:1}
 main{max-width:1200px;margin:auto;padding:20px 14px}
-.hero{padding:35px 25px;border-radius:20px;background:linear-gradient(120deg,#281342,#48204f);margin-bottom:28px}
-.hero h1{font-size:clamp(30px,6vw,48px);margin:0 0 12px}
-.hero p{color:#e0d2f3;line-height:1.5}
+.hero{position:relative;isolation:isolate;overflow:hidden;min-height:410px;padding:clamp(34px,6vw,76px) clamp(22px,5vw,58px);border-radius:24px;border:1px solid #ffffff25;margin-bottom:30px;display:flex;flex-direction:column;justify-content:center;background:radial-gradient(ellipse at 12% 78%,#ff6a3d99 0,transparent 34%),radial-gradient(ellipse at 85% 26%,#3158c899 0,transparent 34%),radial-gradient(ellipse at 54% 110%,#00b8d477 0,transparent 42%),linear-gradient(180deg,#080d27 0%,#25113d 48%,#e64a6b 100%);box-shadow:0 22px 70px #0009}
+.hero:before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 78% 18%,#fff 0 1px,transparent 2px),radial-gradient(circle at 65% 12%,#fff 0 1px,transparent 2px),radial-gradient(circle at 91% 34%,#fff 0 1px,transparent 2px),radial-gradient(circle at 52% 9%,#fff 0 1px,transparent 2px),radial-gradient(circle at 34% 16%,#fff 0 1px,transparent 2px),linear-gradient(145deg,transparent 0 48%,#10152f 48.3% 58%,transparent 58.3%),linear-gradient(35deg,transparent 0 53%,#151a39 53.3% 65%,transparent 65.3%),linear-gradient(180deg,transparent 0 64%,#092c50 64.5%,#071b35 100%);background-size:100% 100%;opacity:.95}
+.hero:after{content:"";position:absolute;z-index:-1;left:-5%;right:-5%;bottom:-70px;height:170px;border-radius:50% 50% 0 0;background:repeating-linear-gradient(180deg,#ffffff12 0 2px,transparent 2px 13px),linear-gradient(180deg,#00b9d455,#03152b);box-shadow:0 -12px 55px #ff8a5b55}
+.hero h1{font-size:clamp(38px,7vw,72px);line-height:1.02;letter-spacing:-2px;margin:0 0 16px;text-shadow:0 5px 28px #000b}
+.hero p{max-width:590px;color:#fff0f4;line-height:1.65;font-size:clamp(15px,2vw,19px);text-shadow:0 2px 12px #000}
+.hero button{align-self:flex-start;margin:8px 8px 0 0;box-shadow:0 8px 28px #0005}
+@media(max-width:650px){.hero{min-height:360px;padding:30px 20px;border-radius:18px}.hero h1{letter-spacing:-1px}.hero:before{opacity:.7}}
 .controls{display:grid;grid-template-columns:1fr 190px;gap:10px;margin:20px 0}
 input,select{background:var(--panel);border:1px solid #ffffff20;color:white;padding:13px;border-radius:10px;width:100%}
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
@@ -410,11 +414,15 @@ footer{padding:42px 20px;color:#8d96ac}
 </header>
 <main>
 <section class="hero">
- <h1>Твой мир кино</h1>
- <p>Выбирай фильмы, открывай новые истории и собирай собственную коллекцию.</p>
- <button class="primary" onclick="showCatalog()">Открыть каталог</button>
- <button id="premiumHeroButton" onclick="window.open('https://mezalebyy.donatik.ua/subs','_blank','noopener')">⭐ Premium за $0.11/мес.</button>
- <button onclick="randomMovie()">Случайный фильм</button>
+ <div style="font-size:13px;letter-spacing:4px;font-weight:bold;color:#ffd6a0;margin-bottom:14px">🌴 МОРЕ · ГОРЫ · ЗВЁЗДЫ · КИНО</div>
+ <h1><span style="color:#fff">Kino</span><span style="color:#ff526d">Meza</span><span style="color:#fff">films</span></h1>
+ <p>Твой личный кинотеатр. Погрузись в атмосферу ночного побережья, отдыхай и выбирай истории, которые хочется пережить.</p>
+ <div style="font-size:15px;color:#ffe4cf;margin:2px 0 12px;text-shadow:0 2px 10px #000">🌙 Звёздное небо &nbsp; ✨ Тёплый берег &nbsp; 🍹 Настроение отдыха</div>
+ <div>
+  <button class="primary" onclick="showCatalog()">▶ Перейти к каталогу</button>
+  <button id="premiumHeroButton" onclick="window.open('https://mezalebyy.donatik.ua/subs','_blank','noopener')">⭐ Premium за $0.11/мес.</button>
+  <button onclick="randomMovie()">🎬 Случайный фильм</button>
+ </div>
 </section>
 <div class="section">
  <h2 id="heading">Каталог фильмов</h2>
